@@ -144,7 +144,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                                 LatLng position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
                                 r.setLatInicio( position.latitude);
                                 r.setLonInicio( position.longitude);
-                                Toast.makeText(getBaseContext(),"Latitud y Longitud de inicio: "+position.latitude+","+position.longitude, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(),"Dirección de incio ingresada correctamente ", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(PlanearRuta.this, "Dirección no encontrada", Toast.LENGTH_SHORT).show();}
                         } catch (IOException e) {
@@ -177,7 +177,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                             if (addresses != null && !addresses.isEmpty()) {
                                 Address addressResult = addresses.get(0);
                                 LatLng position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
-                                Toast.makeText(getBaseContext(),"Latitud y Longitud final: "+position.latitude+","+position.longitude, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(),"Dirección final ingresada correctamente ", Toast.LENGTH_LONG).show();
                                 r.setLatFinal( position.latitude);
                                 r.setLonFinal(position.longitude);
                             } else {

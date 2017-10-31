@@ -140,7 +140,9 @@ public class Perfil extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(),EnviarMensaje.class);
                 intent.putExtra("idOrigenMensaje",actual.getID());
                 intent.putExtra("idDestinoMensaje",idUsuarioPerfil);
-                intent.putExtra("nombreOrigen",actual.getNombre() +  " " + actual.getApellido());
+                //intent.putExtra("nombreOrigen",actual.getNombre() +  " " + actual.getApellido());
+                intent.putExtra("nombreOrigen",nombreUsuario);
+
 
                 startActivity(intent);
                 /*

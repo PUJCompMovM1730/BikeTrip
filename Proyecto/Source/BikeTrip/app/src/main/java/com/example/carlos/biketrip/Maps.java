@@ -99,7 +99,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private ImageButton ibtnRegis ;
     private ImageButton ibtnFin ;
     private FirebaseAuth mAuth;
-
+    private boolean reiniciar;
     private final static int RESULTADOH = 0;
 
     private Button mRutas;
@@ -115,6 +115,8 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         setContentView(R.layout.activity_maps);
         //Inicialización en	onCreate()
         mAuth =	FirebaseAuth.getInstance();
+       // endLatLng=null;
+        reiniciar=true;
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
@@ -122,6 +124,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                reiniciar=true;
                 startActivityForResult(new Intent(getBaseContext(), HistoriaYPlanea.class),RESULTADOH);
             }
         });
@@ -203,6 +206,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     myRef.setValue(r1);
                     Toast.makeText(getBaseContext(),"Ruta Guardada Exitosamente",Toast.LENGTH_LONG).show();
                     endLatLng=null;
+                    reiniciar=false;
                     mMap.clear();
                     //myRef=database.getReference("message");
                     //myRef.setValue("Hello	World!");
@@ -228,6 +232,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         b.putDouble("LonF",endLatLng.longitude);
                     }
                     i.putExtra("Bundle",b);
+                    reiniciar=true;
                     startActivity(i);
                 }
             }
@@ -246,10 +251,12 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 if(idi==1) //Selecciono agregar Evento
                 {
                     Intent intent = new Intent(getBaseContext(), Evento.class);
+                    reiniciar=true;
                     startActivity(intent);
                 }
                 if(idi==2){//Selecciono agregar PUnto
                     Intent intent = new Intent(getBaseContext(), Punto.class);
+                    reiniciar=true;
                     startActivity(intent);
                 }
             }
@@ -336,7 +343,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
-
                         //  Toast.makeText(getBaseContext(),"Lat: "+lat+", Long:"+lon, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -489,47 +495,43 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 return;
             }
             case RESULTADOH: {
-                long latI = data.getExtras().getLong("LatI");
-                long lonI = data.getExtras().getLong("LonI");
-                final double latF =  data.getExtras().getDouble("LatF");
-                final double lonF = data.getExtras().getDouble("LonF");
-                obtenerLocSubs();
-                mLocationCallback =	new	LocationCallback()	 {
-                    @Override
-                    public	void	onLocationResult(LocationResult locationResult) {
-                        Location location = locationResult.getLastLocation();
-                        Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
-                        if (location != null) {
-                            // mMap.clear();
-                            lat = location.getLatitude();
-                            lon = location.getLongitude();
-                            startLatLng = new LatLng(lat,lon);
-                            endLatLng = new LatLng(latF,lonF);
+                if(reiniciar){
+                    long latI = data.getExtras().getLong("LatI");
+                    long lonI = data.getExtras().getLong("LonI");
+                    final double latF =  data.getExtras().getDouble("LatF");
+                    final double lonF = data.getExtras().getDouble("LonF");
+                    obtenerLocSubs();
+                    mLocationCallback =	new	LocationCallback()	 {
+                        @Override
+                        public	void	onLocationResult(LocationResult locationResult) {
+                            Location location = locationResult.getLastLocation();
+                            Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
+                            if (location != null) {
+                                // mMap.clear();
+                                lat = location.getLatitude();
+                                lon = location.getLongitude();
+                                startLatLng = new LatLng(lat,lon);
+                                endLatLng = new LatLng(latF,lonF);
+                                mMap.addMarker(new MarkerOptions().position(endLatLng).icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(endLatLng));
+                                mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                                double d = distance(lat,lon,latF,lonF);
+                                txtduracion.setText(String.valueOf(d));
+                                double tiemp = d/30*60;
+                                mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
+                                txttiempo.setText(String.valueOf(tiemp));
 
-                            mMap.addMarker(new MarkerOptions().position(endLatLng).icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(endLatLng));
-                            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                            double d = distance(lat,lon,latF,lonF);
-                            txtduracion.setText(String.valueOf(d));
-                            double tiemp = d/30*60;
-
-
-
-                            mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
-                            txttiempo.setText(String.valueOf(tiemp));
-
-                            String urlTopass = makeURL(lat,lon, latF,
-                                    lonF);
-                            new connectAsyncTask(urlTopass).execute();
-
+                                String urlTopass = makeURL(lat,lon, latF,
+                                        lonF);
+                                new connectAsyncTask(urlTopass).execute();
+                            }
                         }
-                    }
-                };
+                    };
+                }
                 return;
             }
         }
-
     }
     private	void	startLocationUpdates()	 {
         if	(ContextCompat.checkSelfPermission(this,
@@ -711,26 +713,12 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         double	result	=	RADIUS_OF_EARTH_KM	 *	c;
         return	Math.round(result*100.0)/100.0;
     }
-    /**
-     @Override
-     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-     super.onActivityResult(requestCode, resultCode, data);
-     // Comprobamos si el resultado de la segunda actividad es "RESULT_CANCELED".
-     if (resultCode == RESULT_CANCELED) {
-     // Si es así mostramos mensaje de cancelado por pantalla.
-     Toast.makeText(this, "Resultado cancelado", Toast.LENGTH_SHORT)
-     .show();
-     } else {
-     long latI = data.getExtras().getLong("LatI");
-     long lonI = data.getExtras().getLong("LonI");
-     long latF =  data.getExtras().getLong("LatF");
-     long lonF = data.getExtras().getLong("LonF");
-     // De lo contrario, recogemos el resultado de la segunda actividad.
-     String resultado = data.getExtras().getString("RESULTADO");
-     // Y tratamos el resultado en función de si se lanzó para rellenar el
-     // nombre o el apellido.
-     }
-     }*/
+    @Override
+    public void onResume(){
+        super.onResume();
+        this.reiniciar=true;
+
+    }
 }
 
 

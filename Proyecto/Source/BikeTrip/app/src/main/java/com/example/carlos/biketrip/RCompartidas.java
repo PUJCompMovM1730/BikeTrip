@@ -55,7 +55,6 @@ public class RCompartidas extends AppCompatActivity {
         if(a == 0){
             leerDatos();
         }else{
-            Toast.makeText(getBaseContext(),"LEERDATOS 2", Toast.LENGTH_LONG).show();
             leerDatos2();
         }
 
@@ -85,11 +84,10 @@ public class RCompartidas extends AppCompatActivity {
         myRef = database.getReference(PATH_RUTAS);
 
        final String id = getIntent().getStringExtra("Usuario");
-       Toast.makeText(getBaseContext(),"EL ID ES: "+id, Toast.LENGTH_LONG).show();
+
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Toast.makeText(v.getContext(),"Voy a buscar",Toast.LENGTH_LONG).show();
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     RutaEnt rut = singleSnapshot.getValue(RutaEnt.class);
                     Log.i("Ruta", "Encontró ruta:	" + rut.getNombre());
@@ -127,7 +125,7 @@ public class RCompartidas extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Toast.makeText(v.getContext(),"Voy a buscar",Toast.LENGTH_LONG).show();
+
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     RutaEnt rut = singleSnapshot.getValue(RutaEnt.class);
                     Log.i("Ruta", "Encontró ruta:	" + rut.getNombre());

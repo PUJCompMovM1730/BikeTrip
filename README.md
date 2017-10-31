@@ -1,1 +1,1 @@
-# BikeTrip v1.4. Aplicacion movil desarrollada por RMC.
+# BikeTrip v0.19 Aplicacion movil desarrollada por RMC.
