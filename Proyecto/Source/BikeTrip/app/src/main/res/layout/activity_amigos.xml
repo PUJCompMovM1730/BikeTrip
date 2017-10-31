@@ -1,0 +1,20 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="70dp"
+    android:id="@+id/llListAmigos">
+
+
+    <Button
+        android:id="@+id/btnBuscarUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Buscar Usuario" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listAmigos">
+    </ListView>
+</LinearLayout>

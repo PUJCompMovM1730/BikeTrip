@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="134dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="balsamic sans"
+            android:text="Nombre"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
+            android:typeface="sans" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText1"
+            android:text="Nombre del lugar"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtTelefono"
+            android:layout_width="134dp"
+            android:layout_height="wrap_content"
+            android:text="Telefono"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Telefono de contacto"
+            android:ems="10"
+            android:inputType="phone" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtHorario"
+            android:layout_width="134dp"
+            android:layout_height="wrap_content"
+            android:text="Horario"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
+            />
+        <Spinner
+            android:id="@+id/spi1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            />
+        <Spinner
+            android:id="@+id/spi2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"/>
+        <Spinner
+            android:id="@+id/spi3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"/>
+        <Spinner
+            android:id="@+id/spi4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtComentarios"
+            android:layout_width="134dp"
+            android:layout_height="wrap_content"
+            android:text="Reseña"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editComentarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:text="¿Qué te gustó del lugar?"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/imgb1"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+
+        android:src="@drawable/foto" />
+    <LinearLayout
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btncancelarp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Cancelar"
+            />
+
+        <Button
+            android:id="@+id/btnenviarp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@android:color/holo_blue_dark"
+            android:src="@drawable/foto"
+            android:text="Enviar"
+            android:textColor="@android:color/holo_orange_dark" />
+    </LinearLayout>
+
+
+</LinearLayout>

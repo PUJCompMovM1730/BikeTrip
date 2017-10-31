@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">BikeTrip</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="IniciarSesion">Iniciar Sesion</string>
+    <string name="CrearCuenta">Crear Cuenta</string>
+    <string name="Nombre">Nombre</string>
+    <string name="EjemploNombre">Carlos</string>
+    <string name="EjemploNombre2">Maria</string>
+    <string name="Apellido">Apellido</string>
+    <string name="Edad">Edad</string>
+    <string name="Correo">Correo</string>
+    <string name="EjemploCorreo">example555@gmail.com</string>
+    <string name="EjemploCorreo2">bicilover123@gmail.com</string>
+    <string name="EjemploDescripcion">Me encanta montar bici en mi ciudad y encontrar nuevos destinos con BikeTrip</string>
+    <string name="EjemploDescripcion2">Montar en bicicleta es mi pasion, especialmente con BikeTrip</string>
+    <string name="Contrasena">Contraseña</string>
+    <string name="FechaNac">Fecha de Nacimiento</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="Galeria">Galeria</string>
+    <string name="Camara">Camara</string>
+    <string name="title_activity_menu_principal">MenuPrincipal</string>
+
+
+    <string name="KilometrosRecorridos">Kilometros Recorridos: </string>
+    <string name="CantidadRecorridos">Viajes Recorridos: </string>
+    <string name="Hace">Hace</string>
+    <string name="Minutos">Minutos</string>
+    <string name="EjemploNotificacion">Invitacion Viaje </string>
+    <string name="EjemploHora">12:34 PM</string>
+
+    <string name="IniciarRuta">Iniciar Ruta</string>
+    <string name="Historial">Historial</string>
+    <string name="Amigos">Amigos</string>
+    <string name="Notificaciones">Notificaciones</string>
+    <string name="Configuracion">Configuracion</string>
+    <string name="CerrarSesion">Cerrar Sesion</string>
+
+
+    <string name="errorUsuarioInvalido">Dirección de correo inválida.</string>
+    <string name="errorUsuarioContraseñaInvalida">Dirección de correo o contraseña inválida.</string>
+    <string name="errorUsuarioExistente">Dirección de correo ya existe.</string>
+    <string name="errorContraseñaDebil">La contraseña debe tener al menos 6 caracteres.</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="lista_agregar">
+        <item>Seleccione una opción</item>
+        <item>Agregar Evento</item>
+        <item>Agregar Punto</item>
+    </string-array>
+    <string-array name="lista_publica">
+        <item>Seleccione una opción</item>
+        <item>Publica</item>
+        <item>Privada</item>
+    </string-array>
+    <string name="title_activity_mapa_ruta">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

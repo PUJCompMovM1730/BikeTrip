@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_IniciarRuta"
+            android:icon="@drawable/bike_icon"
+            android:title="@string/IniciarRuta" />
+        <item
+            android:id="@+id/nav_Historial"
+            android:icon="@drawable/reload_icon"
+            android:title="@string/Historial" />
+        <item
+            android:id="@+id/nav_Amigos"
+            android:icon="@drawable/friends_icon"
+            android:title="@string/Amigos" />
+        <item
+            android:id="@+id/nav_Notificaciones"
+            android:icon="@drawable/notifications_icon"
+            android:title="@string/Notificaciones" />
+
+        <item
+            android:id="@+id/nav_Configuracion"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/Configuracion" />
+
+        <item
+            android:id="@+id/nav_CerrarSesion"
+            android:icon="@drawable/logout_icon"
+            android:title="@string/CerrarSesion" />
+
+    </group>
+
+</menu>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/idLayoutHorizontalAmigos"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/ibtnPerfiAmigo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/real_madrid"/>
+
+        <TextView
+            android:id="@+id/tvNombreAmigo"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="@string/Nombre" />
+
+        <TextView
+            android:id="@+id/tvKilometrosAmigo"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bookmark"
+            android:id="@+id/btnBookmark"
+            android:paddingBottom="10dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFechaViaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/ibtnMapa"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@drawable/mapabackg"
+        android:paddingBottom="15dp"/>
+
+
+</LinearLayout>
