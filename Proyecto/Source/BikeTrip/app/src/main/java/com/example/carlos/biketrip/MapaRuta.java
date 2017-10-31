@@ -44,12 +44,12 @@ public class MapaRuta extends Fragment {
             @Override
             public void onClick(View view) {
 
-              /*  Fragment fragment= new Historial();
+              Fragment fragment= new Historial();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_frame, fragment); // fragment container id in first parameter is the  container(Main layout id) of Activity
                 transaction.addToBackStack(null);  // this will manage backstack
                 transaction.commit();
-*/
+
               Intent i = new Intent(getActivity(),HistoriaYPlanea.class);
               i.putExtra("Actividad", 1);
                 startActivity(i);

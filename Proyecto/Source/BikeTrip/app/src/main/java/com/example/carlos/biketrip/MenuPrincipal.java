@@ -1,15 +1,14 @@
 package com.example.carlos.biketrip;
 
 import android.app.FragmentManager;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,8 +26,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,10 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import entidades.RutaEnt;
 import entidades.Usuario;
@@ -55,6 +48,7 @@ public class MenuPrincipal extends AppCompatActivity
     TextView nombreU;
     TextView kilometrosRec;
     TextView cantViajesTot;
+    private int intActividad;
 
     private FirebaseAuth mAuth;
     private	FirebaseAuth.AuthStateListener mAuthListener;
@@ -70,16 +64,16 @@ public class MenuPrincipal extends AppCompatActivity
     public	static	final	String	PATH_IMAGENES="images/";
     public static final String TAG="TAG";
 
+    Fragment fragment = null;
+    boolean fragementoSeleccionado=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
+        intActividad = 0;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -88,7 +82,43 @@ public class MenuPrincipal extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        Intent i = getIntent();
+        int ed = i.getIntExtra("intActividad",0);
+        if (ed!=0){
+            switch (ed){
+                case 1:
+                {
+                    fragment = new MapaRuta();
+                }
+                break;
+                case 2:
+                {
+                    fragment = new Historial();
+                }
+                break;
+                case 3:
+                {
+                    fragment = new Amigos();
+                }
+                break;
+                case 4:
+                {
+                    fragment = new Notificaciones();
+                }
+                break;
+            }
+            FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, fragment);
+            transaction.commit();
+            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }else{
+            FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, new MapaRuta());
+            transaction.commit();
+            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
         mAuth =	FirebaseAuth.getInstance();
         user	=	mAuth.getCurrentUser();
         database=	FirebaseDatabase.getInstance();
@@ -113,12 +143,8 @@ public class MenuPrincipal extends AppCompatActivity
             loadUsers();
             loadRutas();
 
-
         }
-
     }
-
-
 
     public	void	loadUsers()	{
 
@@ -225,27 +251,27 @@ public class MenuPrincipal extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        Fragment fragment = null;
-        boolean fragementoSeleccionado=false;
 
         int id = item.getItemId();
 
         if (id == R.id.nav_IniciarRuta) {
             fragment = new MapaRuta();
+            intActividad=1;
             fragementoSeleccionado = true;
 
         } else if (id == R.id.nav_Historial) {
             fragment = new Historial();
+            intActividad=2;
             fragementoSeleccionado = true;
-
-
         } else if (id == R.id.nav_Amigos) {
             fragment = new Amigos();
+            intActividad=3;
             fragementoSeleccionado = true;
 
         } else if (id == R.id.nav_Notificaciones) {
             fragment = new Notificaciones();
             fragementoSeleccionado = true;
+            intActividad=4;
         } else if (id == R.id.nav_Configuracion) {
 
         } else if (id == R.id.nav_CerrarSesion) {
@@ -258,8 +284,15 @@ public class MenuPrincipal extends AppCompatActivity
         }
 
         if(fragementoSeleccionado){
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
+
+            startActivity(new Intent(getBaseContext(),MenuPrincipal.class).putExtra("intActividad",intActividad));
+          /*  FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, fragment);
+        //    transaction.addToBackStack(null);
+           /* getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
                     fragment).commit();
+            // Commit the transaction
+            transaction.commit();*/
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -14,15 +14,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Date;
+
 import entidades.Mensaje;
 
 public class EnviarMensaje extends AppCompatActivity {
 
+    TextView tvOrigenMensaje;
     EditText etMensaje;
     Button enviarMensaje;
 
     String origen;
     String destino;
+    String nombreOrigen;
 
 
 
@@ -35,13 +39,17 @@ public class EnviarMensaje extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_mensaje);
 
+        tvOrigenMensaje = (TextView)findViewById(R.id.nombreUsuarioOrigen);
         etMensaje = (EditText) findViewById(R.id.edMensajeAEnviar);
         enviarMensaje = (Button)findViewById(R.id.btnEnviarMensaje);
 
 
         origen = getIntent().getStringExtra("idOrigenMensaje");
         destino = getIntent().getStringExtra("idDestinoMensaje");
+        nombreOrigen = getIntent().getStringExtra("nombreOrigen");
         database=	FirebaseDatabase.getInstance();
+
+        tvOrigenMensaje.setText(nombreOrigen);
 
         enviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +58,7 @@ public class EnviarMensaje extends AppCompatActivity {
             }
         });
 
-        etMensaje.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*etMensaje.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i== EditorInfo.IME_ACTION_DONE){
@@ -59,7 +67,7 @@ public class EnviarMensaje extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
 
     }
 
@@ -67,8 +75,9 @@ public class EnviarMensaje extends AppCompatActivity {
         Mensaje nuevoMensaje= new Mensaje();
         nuevoMensaje.setDestino(destino);
         nuevoMensaje.setOrigen(origen);
+        nuevoMensaje.setNombreOrigen(nombreOrigen);
+        nuevoMensaje.setFechaMensaje(new Date());
         nuevoMensaje.setMensaje(etMensaje.getText().toString());
-
 
         if(!nuevoMensaje.getMensaje().isEmpty()){
             myRef=database.getReference();
@@ -80,7 +89,6 @@ public class EnviarMensaje extends AppCompatActivity {
 
             finish();
         }
-
 
 
     }

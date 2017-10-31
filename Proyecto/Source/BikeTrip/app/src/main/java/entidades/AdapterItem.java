@@ -68,7 +68,7 @@ public class AdapterItem extends ArrayAdapter<RutaEnt> {
         DistanciaR.setText(String.valueOf(dir.getDistancia())+" km");
 
         TextView DireccionR = (TextView) v.findViewById(R.id.Direcciones);
-        DireccionR.setText("Desde: "+dir.getLatInicio()+","+dir.getLonInicio()+"\n Hasta: "+dir.getLatFinal()+","+dir.getLonFinal());
+        DireccionR.setText("Desde: "+dir.getInicio()+"\n Hasta: "+dir.getFin());
 
         TextView FechaR = (TextView)v.findViewById(R.id.Fecha);
         FechaR.setText(new java.sql.Date(dir.getTiempo().getTime()).toString());

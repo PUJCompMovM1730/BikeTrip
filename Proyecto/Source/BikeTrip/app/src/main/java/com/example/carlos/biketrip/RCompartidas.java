@@ -45,13 +45,20 @@ public class RCompartidas extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rcompartidas);
-
         list = (ListView) findViewById(R.id.listRC);
         txInfo = (TextView)findViewById(R.id.infoRC);
         rutas = new ArrayList<RutaEnt>();
         database=	FirebaseDatabase.getInstance();
         mAuth =	FirebaseAuth.getInstance();
-        leerDatos();
+        Intent i = getIntent();
+        int a = i.getIntExtra("Actividad",0);
+        if(a == 0){
+            leerDatos();
+        }else{
+            Toast.makeText(getBaseContext(),"LEERDATOS 2", Toast.LENGTH_LONG).show();
+            leerDatos2();
+        }
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -61,25 +68,62 @@ public class RCompartidas extends AppCompatActivity {
                 sel.setIdUsuario(mAuth.getCurrentUser().getUid());
                 myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
 
-                String	key	= myRef.child("rutas").push().getKey();
+                String	key	= myRef.child("rutasP").push().getKey();
                 //myRef.push().getKey();
                 myRef=database.getReference(PATH_RUTAS+key);
                 myRef.setValue(sel);
                 Toast.makeText(getBaseContext(),"Ruta Guardada Exitosamente",Toast.LENGTH_LONG).show();
 
-                //TODO IR AL MENU PRINCIPAL
-
+                startActivity(new Intent(getBaseContext(),MenuPrincipal.class));
             }
         });
-
-
-
     }
+
+    private void leerDatos2() {
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef.child("rutasP");
+        myRef = database.getReference(PATH_RUTAS);
+
+       final String id = getIntent().getStringExtra("Usuario");
+       Toast.makeText(getBaseContext(),"EL ID ES: "+id, Toast.LENGTH_LONG).show();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Toast.makeText(v.getContext(),"Voy a buscar",Toast.LENGTH_LONG).show();
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    RutaEnt rut = singleSnapshot.getValue(RutaEnt.class);
+                    Log.i("Ruta", "Encontró ruta:	" + rut.getNombre());
+
+                    Date today = new Date();
+                    today.setTime(today.getTime());
+                    Date daR = rut.getTiempo();
+                    Boolean b1 = today.before(daR);
+                    Boolean b2 = today.equals(daR);
+                    if(!rut.isPrivada() && (b1 || b2) &&id.equals(rut.getIdUsuario()))
+                    {
+                        rutas.add(rut);
+                    }
+                }
+                Log.i("CANTIDAD:", "rutas:	" + rutas.size());
+                txInfo.setText("----------Su rutas son:"+ rutas.size());
+
+                AdapterItem adapter = new AdapterItem(getBaseContext(),R.layout.item_layout, rutas);
+                list.setAdapter(adapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Consulta", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+    }
+
     public	void	leerDatos() {
         myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef.child("rutas");
         myRef = database.getReference(PATH_RUTAS);
         final String uId = mAuth.getCurrentUser().getUid();
+
+
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,7 +140,6 @@ public class RCompartidas extends AppCompatActivity {
                     if(!rut.isPrivada() && (b1 || b2))
                     {
                         rutas.add(rut);
-
                     }
                 }
                 Log.i("CANTIDAD:", "rutas:	" + rutas.size());

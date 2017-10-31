@@ -117,17 +117,47 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         mAuth =	FirebaseAuth.getInstance();
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
-
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
         mRutas = (Button) findViewById(R.id.btnMasrutas);
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivityForResult(new Intent(getBaseContext(), HistoriaYPlanea.class),RESULTADOH);
             }
         });
+        if(getIntent().getIntExtra("Actividad",0)==1) {
+            Intent data = getIntent();
+            final double latF = data.getExtras().getDouble("LatF");
+            final double lonF = data.getExtras().getDouble("LonF");
+            obtenerLocSubs();
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    Location location = locationResult.getLastLocation();
+                    Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
+                    if (location != null) {
+                        // mMap.clear();
+                        lat = location.getLatitude();
+                        lon = location.getLongitude();
+                        startLatLng = new LatLng(lat, lon);
+                        endLatLng = new LatLng(latF, lonF);
+                        mMap.addMarker(new MarkerOptions().position(endLatLng).icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(endLatLng));
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        double d = distance(lat, lon, latF, lonF);
+                        txtduracion.setText(String.valueOf(d));
+                        double tiemp = d / 30 * 60;
+                        mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
+                        txttiempo.setText(String.valueOf(tiemp));
 
+                        String urlTopass = makeURL(lat, lon, latF,
+                                lonF);
+                        new connectAsyncTask(urlTopass).execute();
+                    }
+                }
+            };
+        }
         ibtnFin = (ImageButton)findViewById(R.id.parar);
         ibtnRegis = (ImageButton)findViewById(R.id.registrar);
         ibtnFin.setOnClickListener(new View.OnClickListener() {
@@ -137,11 +167,11 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
                 // myRef=database.getReference(PATH_RUTAS+user.getUid());
 
-                r1.setLatInicio(startLatLng.latitude);
-                r1.setLonInicio(startLatLng.longitude);
-                if(endLatLng==null){
+                if(endLatLng==null ||startLatLng==null){
                     Toast.makeText(getBaseContext(),"Por favor indique un punto de destino", Toast.LENGTH_SHORT).show();
                 }else{
+                    r1.setLatInicio(startLatLng.latitude);
+                    r1.setLonInicio(startLatLng.longitude);
                     r1.setLatFinal(endLatLng.latitude);
                     r1.setLonFinal( endLatLng.longitude);
                     r1.setIdUsuario(mAuth.getCurrentUser().getUid());
@@ -158,6 +188,13 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     r1.setDescripcion(sqlDate.toString()+": Distancia"+distance(startLatLng.latitude,startLatLng.longitude,
                             endLatLng.latitude,endLatLng.longitude));
                     // r1.setTiepo(new Date(););
+                    r1.setInicio("Actual");
+                    if(!txtDireccion.getText().toString().equals("")){
+                        r1.setFin(txtDireccion.getText().toString());
+                    }else{
+                        r1.setFin("Ubicación seleccionada");
+                    }
+
                     myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
 
                     String	key	= myRef.child("rutas").push().getKey();
@@ -165,6 +202,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     myRef=database.getReference(PATH_RUTAS+key);
                     myRef.setValue(r1);
                     Toast.makeText(getBaseContext(),"Ruta Guardada Exitosamente",Toast.LENGTH_LONG).show();
+                    endLatLng=null;
                     mMap.clear();
                     //myRef=database.getReference("message");
                     //myRef.setValue("Hello	World!");
@@ -175,19 +213,23 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         ibtnRegis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(),PlanearRuta.class);
-                Bundle b = new Bundle();
-                b.putDouble("LatI",startLatLng.latitude);
-                b.putDouble("LonI",startLatLng.longitude);
-                b.putBoolean("Fin",false);
-                if(endLatLng!=null)
-                {
-                    b.putDouble("LatF",endLatLng.latitude);
-                    b.putDouble("LonF",endLatLng.longitude);
-                }
-                i.putExtra("Bundle",b);
-                startActivity(i);
 
+                if(startLatLng==null||endLatLng==null){
+                    Toast.makeText(getBaseContext(),"Para guardar esta ruta para el futuro, ingrese los datos de la misma", Toast.LENGTH_LONG);
+                }else{
+                    Intent i = new Intent(getBaseContext(),PlanearRuta.class);
+                    Bundle b = new Bundle();
+                    b.putDouble("LatI",startLatLng.latitude);
+                    b.putDouble("LonI",startLatLng.longitude);
+                    b.putBoolean("Fin",false);
+                    if(endLatLng!=null)
+                    {
+                        b.putDouble("LatF",endLatLng.latitude);
+                        b.putDouble("LonF",endLatLng.longitude);
+                    }
+                    i.putExtra("Bundle",b);
+                    startActivity(i);
+                }
             }
         });
 
@@ -334,6 +376,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                endLatLng=latLng;
                 double la = latLng.latitude;
                 double lo = latLng.longitude;
                 if(startLatLng==null){
@@ -342,7 +385,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 double d = distance(startLatLng.latitude,startLatLng.longitude,la,lo);
                 txtduracion.setText(String.valueOf(d));
                 double tiemp = d/30*60;
-
                 txttiempo.setText(String.valueOf(tiemp));
                 String urlTopass = makeURL(startLatLng.latitude,startLatLng.longitude,latLng.latitude,latLng.longitude);
                 new connectAsyncTask(urlTopass).execute();
@@ -472,11 +514,14 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                             txtduracion.setText(String.valueOf(d));
                             double tiemp = d/30*60;
 
+
+
+                            mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
                             txttiempo.setText(String.valueOf(tiemp));
+
                             String urlTopass = makeURL(lat,lon, latF,
                                     lonF);
                             new connectAsyncTask(urlTopass).execute();
-                            mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
 
                         }
                     }

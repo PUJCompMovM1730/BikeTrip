@@ -258,6 +258,7 @@ public class CrearCuenta extends AppCompatActivity {
             nuevoUsuario.setEdad(Integer.valueOf(mFechaNac.getText().toString()));
             nuevoUsuario.setEstatura(0);
             nuevoUsuario.setImagen("");
+            nuevoUsuario.setPortada("");
             nuevoUsuario.setPeso(0);
 
 

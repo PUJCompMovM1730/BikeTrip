@@ -17,8 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.carlos.biketrip.Amigos;
+import com.example.carlos.biketrip.Maps;
 import com.example.carlos.biketrip.Perfil;
 import com.example.carlos.biketrip.R;
+import com.example.carlos.biketrip.RCompartidas;
+import com.example.carlos.biketrip.Ruta;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,6 +60,7 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_IMAGENES="images/";
     public static final String TAG="TAG";
+    private Usuario item;
 
     public CustomAdapter(Context context, int resource, List<Usuario> objects,
                          StorageReference mStorageRef, FirebaseDatabase d,
@@ -97,11 +102,10 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
 
         }
 
-        Usuario item = data.get(position);
+       item= data.get(position);
         Log.i("CustomAdapter+loadRutas",item.toString());
         infoUS.IUnom.setText(item.getNombre()+" "+item.getApellido());
         loadRutas(item, infoUS);
-
 
 
 
@@ -114,11 +118,13 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         }
 
         final String IDUPerfil = item.getID();
+        final String nombre = infoUS.IUnom.getText().toString();
         infoUS.IUfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), Perfil.class);
                 intent.putExtra("idPerilAmigoDesdeCustom",IDUPerfil);
+                intent.putExtra("nombreUsuarioDesdeCustom",nombre);
                 getContext().startActivity(intent);
             }
         });
@@ -126,9 +132,13 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         infoUS.IURuta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Un toast por ahora
-                Toast.makeText(getContext(),"Toca mostrar esa ruta...",
-                        Toast.LENGTH_LONG).show();
+                RutaEnt miRutabebe= cargarRuta(item);
+                if(miRutabebe.getDescripcion()!=null) {
+                    Intent i = new Intent(getContext(),Maps.class);
+                    i.putExtra("Ruta",miRutabebe);
+                    i.putExtra("Actividad",1);
+                    getContext().startActivity(i);
+                }
             }
         });
 
@@ -136,9 +146,11 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         infoUS.IUBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Ruta agregada satisfactoriamente",
-                        Toast.LENGTH_LONG).show();
 
+                    Intent i = new Intent(getContext(), RCompartidas.class);
+                    i.putExtra("Actividad",1);
+                    i.putExtra("Usuario",IDUPerfil);
+                      getContext().startActivity(i);
             }
         });
 
@@ -154,7 +166,52 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         public TextView IUultimoviaje;
 
     }
+    public RutaEnt cargarRuta(final Usuario user){
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef.child("rutas");
+        final RutaEnt rutaMAx = new RutaEnt();
+        Date d = new Date();
+        d.setTime(0);
+        rutaMAx.setTiempo(d);
+        myRef = database.getReference(PATH_RUTAS);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    RutaEnt rut = singleSnapshot.getValue(RutaEnt.class);
+                    Log.i("Ruta", "Encontró ruta:	" + rut.getNombre());
+                    Date today = new Date();
+                    today.setTime(today.getTime());
+                    Date daR = rut.getTiempo();
+                    Boolean b1 = today.before(daR);
+                    Boolean b2 = today.equals(daR);
+                    if(!rut.isPrivada() && (b1 || b2)&&user.getID().equals(rut.getIdUsuario()))
+                    {
+                        if(rut.getTiempo().after( rutaMAx.getTiempo()))
+                        {
+                            rutaMAx.setTiempo(rut.getTiempo());
+                            rutaMAx.setFin(rut.getFin());
+                            rutaMAx.setInicio(rut.getInicio());
+                            rutaMAx.setDescripcion(rut.getDescripcion());
+                            rutaMAx.setDistancia(rut.getDistancia());
+                            rutaMAx.setIdUsuario(rut.getIdUsuario());
+                            rutaMAx.setLatFinal(rut.getLatFinal());
+                            rutaMAx.setLatInicio(rut.getLatInicio());
+                            rutaMAx.setLonFinal(rut.getLonFinal());
+                            rutaMAx.setLonInicio(rut.getLonInicio());
 
+                        }
+                    }
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Consulta", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+        return rutaMAx;
+    };
 
     public	void	loadRutas(final Usuario user, final InfoUsuario infoUS)	{
 
@@ -165,27 +222,20 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
 
                 boolean tieneRuta=false;
                 double km =0;
-
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.YEAR, 5000);
                 cal.set(Calendar.MONTH, Calendar.DECEMBER);
                 cal.set(Calendar.DAY_OF_MONTH, 30);
                 Date fechaMasReciente = new Date(Calendar.getInstance().getTime().getTime());
-
                 for	(DataSnapshot singleSnapshot :	dataSnapshot.getChildren())	{
-
                     RutaEnt r=new RutaEnt();
                     r=	singleSnapshot.getValue(RutaEnt.class);
 
                     Date fechaRuta = r.getTiempo();
-
-
-
                     if(r.getIdUsuario().equals(user.getID())){
                         km+=r.getDistancia();
                         if(fechaRuta.before(fechaMasReciente))
                             fechaMasReciente=fechaRuta;
-
                         Log.i("USUARIOCONRUTA",r.getIdUsuario()+ "---"+user.toString());
                         tieneRuta = true;
                     }
@@ -195,7 +245,7 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
 
                 if(tieneRuta) {
                     //Fecha mas reciente
-                    calcularFechaUltimaRuta(fechaMasReciente,infoUS);
+               //     calcularFechaUltimaRuta(fechaMasReciente,infoUS);
                 }
 
 
@@ -209,7 +259,6 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
     }
 
     public void calcularFechaUltimaRuta(Date fechaMasReciente,InfoUsuario infoUS){
-
 
         int segundos,minutos,horas,dias,semanas,meses, anios;
         int segundosActual,minutosActual,horasActual,diasActual,

@@ -6,4 +6,6 @@
     <color name="colorGris">#FFF</color>
     <color name="colorFucsia">#F16F7D</color>
     <color name="colorNaranja">#FE9A2E</color>
+    <color name="transparente">#00000000</color>
+
 </resources>

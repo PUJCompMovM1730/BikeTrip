@@ -1,14 +1,18 @@
 package com.example.carlos.biketrip;
 
-import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +32,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
     TextView txPlaneadas;
     ListView listHistorial;
     ListView listPlaneadas;
+    Button btnVolver;
     ArrayList<RutaEnt> rutasH;
     ArrayList<RutaEnt> rutasP;
     private FirebaseDatabase database;
@@ -52,15 +57,27 @@ public class HistoriaYPlanea extends AppCompatActivity {
         txPlaneadas = (TextView) findViewById(R.id.txtHistorial);
         listHistorial = (ListView) findViewById(R.id.listHis);
         listPlaneadas = (ListView) findViewById(R.id.listPlan);
+        btnVolver = (Button) findViewById(R.id.btnvolver);
         rutasH = new ArrayList<RutaEnt>();
         rutasP = new ArrayList<RutaEnt>();
-
         database=	FirebaseDatabase.getInstance();
         database1 = FirebaseDatabase.getInstance();
         mAuth =	FirebaseAuth.getInstance();
         leerDatos();
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
+                        new MapaRuta()).commit();*/
+                        startActivity(new Intent(getBaseContext(),MenuPrincipal.class));
 
-
+             /*  Fragment fragment= new MapaRuta();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, fragment); // fragment container id in first parameter is the  container(Main layout id) of Activity
+                transaction.addToBackStack(null);  // this will manage backstack
+                transaction.commit();*/
+            }
+        });
         listHistorial.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

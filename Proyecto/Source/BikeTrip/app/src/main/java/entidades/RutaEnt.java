@@ -16,12 +16,30 @@ public class RutaEnt implements Serializable {
     private double lonFinal;
     private String descripcion;
     private String nombre;
+    private String inicio;
+    private String fin;
     private Date tiempo;
     private String idUsuario;
     private double distancia;
     private boolean privada;
     public RutaEnt() {
         //this.tiempo= new GregorianCalendar();
+    }
+
+    public String getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(String inicio) {
+        this.inicio = inicio;
+    }
+
+    public String getFin() {
+        return fin;
+    }
+
+    public void setFin(String fin) {
+        this.fin = fin;
     }
 
     public boolean isPrivada() {

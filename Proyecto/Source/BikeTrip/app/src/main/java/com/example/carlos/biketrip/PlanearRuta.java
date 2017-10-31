@@ -215,6 +215,8 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                 }else {
                     r.setDescripcion(txtDesc.getText().toString());
                     r.setNombre(txtNombre.getText().toString());
+                    r.setInicio(txtInicio.getText().toString());
+                    r.setFin(txtFinal.getText().toString());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                     String hora = txtHoraRP.getText().toString();
                     String fecha = txtFechaRP.getText().toString();
@@ -274,6 +276,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                 RutaEnt a = new RutaEnt();
                 a = (RutaEnt) data.getExtras().getSerializable("Ruta");
                 txtNombre.setText(a.getNombre());
+                //txtInicio.setText("Actual");
                 txtDesc.setText(a.getDescripcion());
                 long lnMilisegundos = a.getTiempo().getTime();
                 java.sql.Date sqlDate = new java.sql.Date(lnMilisegundos);

@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="70dp"
-    android:background="@color/colorGris"
     android:id="@+id/llListAmigos">
 
 

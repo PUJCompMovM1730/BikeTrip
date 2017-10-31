@@ -1,5 +1,6 @@
 package entidades;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -10,13 +11,32 @@ public class Mensaje {
 
     String origen;
     String destino;
+    String nombreOrigen;
     String mensaje;
+    Date fechaMensaje;
 
 
     public Mensaje() {
         this.origen = "";
         this.destino ="";
         this.mensaje ="";
+        this.nombreOrigen="";
+    }
+
+    public Date getFechaMensaje() {
+        return fechaMensaje;
+    }
+
+    public void setFechaMensaje(Date fechaMensaje) {
+        this.fechaMensaje = fechaMensaje;
+    }
+
+    public String getNombreOrigen() {
+        return nombreOrigen;
+    }
+
+    public void setNombreOrigen(String nombreOrigen) {
+        this.nombreOrigen = nombreOrigen;
     }
 
     public String getOrigen() {
@@ -41,5 +61,10 @@ public class Mensaje {
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
+    }
+
+    @Override
+    public String toString() {
+        return mensaje+" - "+nombreOrigen;
     }
 }

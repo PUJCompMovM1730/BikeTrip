@@ -63,8 +63,6 @@ public class Amigos extends Fragment{
     public	static	final	String	PATH_RUTAS="rutas/";
     public static final String TAG="TAG";
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,10 +91,7 @@ public class Amigos extends Fragment{
                 startActivity(intent);
             }
         });
-
         return super.onCreateView(inflater, container, savedInstanceState);
-
-
 
     }
 

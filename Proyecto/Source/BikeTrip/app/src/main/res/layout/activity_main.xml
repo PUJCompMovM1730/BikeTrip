@@ -76,6 +76,7 @@
             android:drawablePadding="12dp"
             android:padding="8dp"
             android:hint="......."
+            android:textColor="@color/colorGris"
             android:textColorHint="@color/colorGris"
             android:maxLines="1"
             android:background="@android:color/transparent"
@@ -100,6 +101,8 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="8dp"
+            android:textColor="@color/colorGris"
+
             android:textColorHint="@color/colorGris" />
 
 
