@@ -24,17 +24,17 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/CambiarNombre"/>
+                android:hint="CambiarNombre"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/CambiarApellida"/>
+                android:hint="CambiarApellido"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/CambiarPass"/>
+                android:hint="CambiarPass"/>
 
         </LinearLayout>
 
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/ActualizarPerfil" />
+                android:text="ActualizarPerfil" />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
