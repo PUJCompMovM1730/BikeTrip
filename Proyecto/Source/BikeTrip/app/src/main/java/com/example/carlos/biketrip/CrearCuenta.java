@@ -11,10 +11,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,9 +55,10 @@ public class CrearCuenta extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     Usuario nuevoUsuario;
+    int posSpinner;
 
 
-
+    Spinner spinner;
     Button bcrear;
     Button bcancelar;
 
@@ -72,6 +76,8 @@ public class CrearCuenta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_cuenta);
 
+        posSpinner = -1;
+        spinner = (Spinner)findViewById(R.id.spinnerTipoUsuario);
         bcrear = (Button)findViewById(R.id.btnConfirmCrear);
         bcancelar = (Button)findViewById(R.id.btnCancelarCrear);
 
@@ -85,6 +91,7 @@ public class CrearCuenta extends AppCompatActivity {
         mAuth =	FirebaseAuth.getInstance();
         database=	FirebaseDatabase.getInstance();
         nuevoUsuario = new Usuario();
+
 
 
         mAuthListener =	new	FirebaseAuth.AuthStateListener()	{
@@ -116,6 +123,18 @@ public class CrearCuenta extends AppCompatActivity {
             }
         });
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                posSpinner = i-1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         bcrear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +155,10 @@ public class CrearCuenta extends AppCompatActivity {
 
     private	boolean validateForm()	{
         boolean valid	=	true;
+
+        if(posSpinner>1 || posSpinner<0)
+            valid = false;
+
         String	email	=	mUser.getText().toString();
         if	(TextUtils.isEmpty(email))	{
             mUser.setError("Required.");
@@ -243,6 +266,10 @@ public class CrearCuenta extends AppCompatActivity {
                         }
                     });
         }
+        else{
+            Toast.makeText(getBaseContext(),"Forma no llenada correctamente.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -260,6 +287,7 @@ public class CrearCuenta extends AppCompatActivity {
             nuevoUsuario.setImagen("");
             nuevoUsuario.setPortada("");
             nuevoUsuario.setPeso(0);
+            nuevoUsuario.setTipo(posSpinner);
 
 
             myRef=database.getReference(PATH_USERS+user.getUid());

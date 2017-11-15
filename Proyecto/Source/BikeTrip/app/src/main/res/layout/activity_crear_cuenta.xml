@@ -77,6 +77,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:inputType="textPassword"/>
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerTipoUsuario"
+            android:entries="@array/tipo_usuario">
+        </android.support.v7.widget.AppCompatSpinner>
 
 
         <LinearLayout

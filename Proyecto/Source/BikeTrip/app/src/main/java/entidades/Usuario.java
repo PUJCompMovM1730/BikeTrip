@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class Usuario {
 
+    private int tipo;
     private String ID;
     private String nombre;
     private String apellido;
@@ -24,6 +25,15 @@ public class Usuario {
     private String imagen;
     private String portada;
     private String descripcion;
+
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
 
     public String getPortada() {
         return portada;
