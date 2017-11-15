@@ -1,5 +1,7 @@
 package entidades;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -65,6 +67,8 @@ public class Mensaje {
 
     @Override
     public String toString() {
-        return mensaje+" - "+nombreOrigen;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String fecha = dateFormat.format(fechaMensaje);
+        return mensaje + " - "+nombreOrigen + " - " + fecha;
     }
 }

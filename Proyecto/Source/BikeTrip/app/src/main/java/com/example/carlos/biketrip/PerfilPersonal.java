@@ -131,7 +131,8 @@ public class PerfilPersonal extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(),EnviarMensaje.class);
                 intent.putExtra("idOrigenMensaje",actual.getID());
                 intent.putExtra("idDestinoMensaje",listDatosAMostrar.get(i).getOrigen());
-                intent.putExtra("nombreOrigen",listDatosAMostrar.get(i).getNombreOrigen());
+                intent.putExtra("nombreOrigen",actual.getNombre());
+                intent.putExtra("nombreDestino",listDatosAMostrar.get(i).getNombreOrigen());
                 startActivity(intent);
             }
         });

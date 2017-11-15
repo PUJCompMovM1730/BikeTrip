@@ -20,13 +20,14 @@ import entidades.Mensaje;
 
 public class EnviarMensaje extends AppCompatActivity {
 
-    TextView tvOrigenMensaje;
+    TextView tvDestinoMensaje;
     EditText etMensaje;
     Button enviarMensaje;
 
     String origen;
     String destino;
     String nombreOrigen;
+    String nombreDestino;
 
 
 
@@ -39,7 +40,7 @@ public class EnviarMensaje extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_mensaje);
 
-        tvOrigenMensaje = (TextView)findViewById(R.id.nombreUsuarioOrigen);
+        tvDestinoMensaje = (TextView)findViewById(R.id.nombreUsuarioDestino);
         etMensaje = (EditText) findViewById(R.id.edMensajeAEnviar);
         enviarMensaje = (Button)findViewById(R.id.btnEnviarMensaje);
 
@@ -47,9 +48,10 @@ public class EnviarMensaje extends AppCompatActivity {
         origen = getIntent().getStringExtra("idOrigenMensaje");
         destino = getIntent().getStringExtra("idDestinoMensaje");
         nombreOrigen = getIntent().getStringExtra("nombreOrigen");
+        nombreDestino = getIntent().getStringExtra("nombreDestino");
         database=	FirebaseDatabase.getInstance();
 
-        tvOrigenMensaje.setText(nombreOrigen);
+        tvDestinoMensaje.setText(nombreDestino);
 
         enviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
