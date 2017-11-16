@@ -380,7 +380,8 @@ public class PerfilPersonal extends AppCompatActivity {
                         PerfilPersonalEdad.setText(""+u.getEdad());
 
                         if(u.getImagen()!=null ||!u.getImagen().equals("")){
-                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+u.getImagen());
+                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES
+                                    +u.getID()+"/"+u.getImagen());
                             Glide.with(getBaseContext())
                                     .using(new FirebaseImageLoader())
                                     .load(mStorageRef)
@@ -388,7 +389,8 @@ public class PerfilPersonal extends AppCompatActivity {
                         }
 
                         if(u.getPortada()!=null ||!u.getPortada().equals("")){
-                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+u.getPortada());
+                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES
+                                    +u.getID()+"/"+u.getPortada());
                             Glide.with(getBaseContext())
                                     .using(new FirebaseImageLoader())
                                     .load(mStorageRef)

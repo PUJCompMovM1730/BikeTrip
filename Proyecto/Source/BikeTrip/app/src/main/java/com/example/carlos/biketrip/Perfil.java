@@ -215,7 +215,8 @@ public class Perfil extends AppCompatActivity {
 
 
                         if(!u.getImagen().equals("")){
-                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+u.getImagen());
+                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES
+                                    +u.getID()+"/"+u.getImagen());
                             Glide.with(getBaseContext())
                                     .using(new FirebaseImageLoader())
                                     .load(mStorageRef)
@@ -223,7 +224,8 @@ public class Perfil extends AppCompatActivity {
                         }
 
                         if(!u.getPortada().equals("")){
-                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+u.getPortada());
+                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES
+                                    +u.getID()+"/"+u.getPortada());
                             Glide.with(getBaseContext())
                                     .using(new FirebaseImageLoader())
                                     .load(mStorageRef)

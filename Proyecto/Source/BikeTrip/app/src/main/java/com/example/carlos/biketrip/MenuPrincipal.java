@@ -163,7 +163,8 @@ public class MenuPrincipal extends AppCompatActivity
                         nombreU.setText(u.getNombre() + " " +u.getApellido());
 
                         if(!u.getImagen().equals("")){
-                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+u.getImagen());
+                            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES
+                                    +user.getUid()+"/"+u.getImagen());
                             Glide.with(getBaseContext())
                                     .using(new FirebaseImageLoader())
                                     .load(mStorageRef)

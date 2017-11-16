@@ -56,6 +56,8 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
     FirebaseDatabase database;
     DatabaseReference myRef;
     StorageReference mStorageRef;
+    private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_IMAGENES="images/";
@@ -72,6 +74,8 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         this.mStorageRef = mStorageRef;
         this.database = d;
         this.myRef=dr;
+        mAuth =	FirebaseAuth.getInstance();
+        user	=	mAuth.getCurrentUser();
     }
 
     @Override
@@ -110,7 +114,7 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
 
 
         if(!item.getImagen().equals("")){
-            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+item.getImagen());
+            mStorageRef = FirebaseStorage.getInstance().getReference(PATH_IMAGENES+item.getID()+"/"+item.getImagen());
             Glide.with(getContext())
                     .using(new FirebaseImageLoader())
                     .load(mStorageRef)

@@ -8,11 +8,9 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -88,7 +86,8 @@ public class DownloadImage extends AsyncTask<String,Void,Bitmap>{
             database=	FirebaseDatabase.getInstance();
             mStorageRef = FirebaseStorage.getInstance().getReference();
 
-            StorageReference mRef = mStorageRef.child(PATH_IMAGENES+uri.getLastPathSegment().trim());
+            StorageReference mRef = mStorageRef.child(PATH_IMAGENES+id+"/"
+                    +uri.getLastPathSegment().trim());
             mRef.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -107,6 +106,7 @@ public class DownloadImage extends AsyncTask<String,Void,Bitmap>{
                         }
                     });
             usuario.setImagen(uri.getLastPathSegment());
+            usuario.setID(id);
             myRef=database.getReference(PATH_USERS+id);
             myRef.setValue(usuario);
         }
