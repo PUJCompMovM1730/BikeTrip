@@ -88,6 +88,7 @@ public class BuscarUsuario extends AppCompatActivity {
     public	void loadListU()	{
 
         myRef =	database.getReference(PATH_USERS);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         myRef.addValueEventListener(new	ValueEventListener()	{
             @Override
             public	void	onDataChange(DataSnapshot dataSnapshot)	 {
@@ -97,7 +98,8 @@ public class BuscarUsuario extends AppCompatActivity {
                     u=	singleSnapshot.getValue(Usuario.class);
                     u.setID(singleSnapshot.getKey());
 
-                    data.add(u);
+                    if(!user.getUid().equals(u.getID()))
+                        data.add(u);
                     Log.i("BuscarAmigo", u.toString());
                 }
 
