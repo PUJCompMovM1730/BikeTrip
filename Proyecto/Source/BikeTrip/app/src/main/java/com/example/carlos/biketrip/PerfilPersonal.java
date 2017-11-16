@@ -165,7 +165,7 @@ public class PerfilPersonal extends AppCompatActivity {
                     myRef.setValue(PerfilPersonalCorreo.getText().toString());
 
                     myRef=database.getReference(PATH_USERS+actual.getID()+"/edad");
-                    myRef.setValue(Integer.parseInt(PerfilPersonalEdad.getText().toString()));
+                    myRef.setValue(PerfilPersonalEdad.getText().toString());
 
 
                     insertarPortadaEnStorageBD();
@@ -459,7 +459,8 @@ public class PerfilPersonal extends AppCompatActivity {
 
 
             mStorageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference mRef = mStorageRef.child(PATH_IMAGENES+uriPortada.getLastPathSegment().trim());
+            StorageReference mRef = mStorageRef.child(PATH_IMAGENES
+                    +user.getUid()+"/"+uriPortada.getLastPathSegment().trim());
 
 
             mRef.putFile(uriPortada)
@@ -498,7 +499,8 @@ public class PerfilPersonal extends AppCompatActivity {
 
         if(uriPerfil!=null) {
             mStorageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference mRef = mStorageRef.child(PATH_IMAGENES+uriPerfil.getLastPathSegment().trim());
+            StorageReference mRef = mStorageRef.child(PATH_IMAGENES
+                    +user.getUid()+"/"+uriPerfil.getLastPathSegment().trim());
 
 
             mRef.putFile(uriPerfil)
