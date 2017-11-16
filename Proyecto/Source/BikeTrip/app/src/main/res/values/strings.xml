@@ -10,7 +10,7 @@
     <string name="EjemploNombre">Carlos</string>
     <string name="EjemploNombre2">Maria</string>
     <string name="Apellido">Apellido</string>
-    <string name="Edad">Edad</string>
+    <string name="Edad">mm/dd/yyyy</string>
     <string name="Correo">Correo</string>
     <string name="EjemploCorreo">example555@gmail.com</string>
     <string name="EjemploCorreo2">bicilover123@gmail.com</string>

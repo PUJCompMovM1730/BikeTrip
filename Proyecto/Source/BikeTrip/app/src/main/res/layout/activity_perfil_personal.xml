@@ -89,6 +89,7 @@
                     android:enabled="false"
                     android:text="@string/Edad"
                     android:textAlignment="center"
+                    android:inputType="number"
                     android:background="@color/transparente"/>
 
                 <EditText
@@ -99,6 +100,7 @@
                     android:enabled="false"
                     android:text="@string/EjemploCorreo2"
                     android:textAlignment="center"
+                    android:inputType="textEmailAddress"
                     android:background="@color/transparente"/>
 
                 <ListView
