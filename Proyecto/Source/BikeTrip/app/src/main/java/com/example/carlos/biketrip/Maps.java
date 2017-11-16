@@ -58,9 +58,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -108,7 +111,8 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     public	static	final	String	PATH_RUTAS="rutas/";
-
+    public	static	final	String	PATH_EVENTOS="eventos/";
+    public	static	final	String	PATH_PUNTOS="puntos/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +155,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         double d = distance(lat, lon, latF, lonF);
                         txtduracion.setText(String.valueOf(d));
                         double tiemp = d / 30 * 60;
+                        loadTodo();
                         mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
                         txttiempo.setText(String.valueOf(tiemp));
 
@@ -250,9 +255,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 long idi = adapterView.getSelectedItemId();
                 if(idi==1) //Selecciono agregar Evento
                 {
-                    Intent intent = new Intent(getBaseContext(), Evento.class);
-                    reiniciar=true;
-                    startActivity(intent);
+                    Intent i = new Intent(getBaseContext(), Evento.class);
+                    //Bundle b = new Bundle();
+                    if(lat!=0){
+                        startLatLng = new LatLng(lat,lon);
+                        i.putExtra("Lat",lat);
+                        i.putExtra("Lon",lon);
+                       Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
+                        reiniciar=true;
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
+                    }
+
                 }
                 if(idi==2){//Selecciono agregar PUnto
                     Intent intent = new Intent(getBaseContext(), Punto.class);
@@ -343,6 +358,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
+                        loadTodo();
                         //  Toast.makeText(getBaseContext(),"Lat: "+lat+", Long:"+lon, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -401,8 +417,34 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                marker.remove();
+            public boolean onMarkerClick(final Marker marker) {
+
+                myRef = database.getReference(PATH_PUNTOS);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            EventoEnt myEvento =	singleSnapshot.getValue(EventoEnt.class);
+                            Log.i("Evento: ", "Encontró evento:	");
+                            Double eveLat = myEvento.getLat();
+                            Double eveLon = myEvento.getLon();
+                            if(eveLat==marker.getPosition().latitude&& eveLon==marker.getPosition().longitude)
+                            {
+                                Toast.makeText(getBaseContext(),"EVENTO: "+myEvento.getComentarios(),Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                    }
+                });
+
+                // Return false to indicate that we have not consumed the event and that we wish
+                // for the default behavior to occur (which is for the camera to move such that the
+                // marker is centered and for the marker's info window to open, if it has one).
                 return false;
             }
         });
@@ -519,6 +561,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                 double d = distance(lat,lon,latF,lonF);
                                 txtduracion.setText(String.valueOf(d));
                                 double tiemp = d/30*60;
+                                loadTodo();
                                 mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
                                 txttiempo.setText(String.valueOf(tiemp));
 
@@ -719,6 +762,71 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         this.reiniciar=true;
 
     }
+    public void loadTodo(){
+        loadEventos();
+        loadPuntos();
+    }
+    public void loadEventos() {
+        myRef = database.getReference(PATH_EVENTOS);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    EventoEnt myEvento =	singleSnapshot.getValue(EventoEnt.class);
+                    Log.i("Evento: ", "Encontró evento:	");
+                    Double eveLat = myEvento.getLat();
+                    Double eveLon = myEvento.getLon();
+                    Double dis = distance(lat,lon, eveLat,eveLon);
+                    LatLng eveL = new LatLng(eveLat,eveLon);
+                    if(dis<=10)
+                    {
+                        mMap.addMarker(new MarkerOptions().position(eveL).icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+    }
+    public void loadPuntos() {
+        myRef = database.getReference(PATH_PUNTOS);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    EventoEnt myEvento =	singleSnapshot.getValue(EventoEnt.class);
+                    Log.i("Evento: ", "Encontró evento:	");
+                    Double eveLat = myEvento.getLat();
+                    Double eveLon = myEvento.getLon();
+                    Double dis = distance(lat,lon, eveLat,eveLon);
+                    LatLng eveL = new LatLng(eveLat,eveLon);
+                    if(dis<=10)
+                    {
+                        mMap.addMarker(new MarkerOptions().position(eveL).icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+    }
+
+
+
+
+
+
 }
-
-
