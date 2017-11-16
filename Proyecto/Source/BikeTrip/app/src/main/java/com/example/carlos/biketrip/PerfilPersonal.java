@@ -153,7 +153,7 @@ public class PerfilPersonal extends AppCompatActivity {
                     actual.setNombre(PerfilPersonalNombre.getText().toString().trim());
                     actual.setDescripcion(PerfilPersonalBio.getText().toString().trim());
                     actual.setCorreo(PerfilPersonalCorreo.getText().toString().trim());
-                    actual.setEdad(Integer.parseInt(PerfilPersonalEdad.getText().toString().trim()));
+                    actual.setEdad(PerfilPersonalEdad.getText().toString().trim());
 
                     myRef=database.getReference(PATH_USERS+actual.getID()+"/nombre");
                     myRef.setValue(PerfilPersonalNombre.getText().toString());

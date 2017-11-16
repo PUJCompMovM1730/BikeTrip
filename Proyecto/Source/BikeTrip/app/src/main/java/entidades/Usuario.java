@@ -18,7 +18,7 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String correo;
-    private int edad;
+    private String edad;
     private double peso;
     private double estatura;
     private Map<String,String> amigos; // Representa la lista de id de los amigos DEL  firebase
@@ -87,11 +87,11 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public int getEdad() {
+    public String getEdad() {
         return edad;
     }
 
-    public void setEdad(int edad) {
+    public void setEdad(String edad) {
         this.edad = edad;
     }
 

@@ -66,6 +66,15 @@
     </string-array>
     <string name="title_activity_mapa_ruta">Map</string>
 
+
+    <string name="facebook_app_id">295367064293362</string>
+    <string name="fb_login_protocol_scheme">fb295367064293362</string>
+
+
+
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

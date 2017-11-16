@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,7 +52,6 @@ public class MenuPrincipal extends AppCompatActivity
     private int intActividad;
 
     private FirebaseAuth mAuth;
-    private	FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser user;
 
     FirebaseDatabase database;
@@ -276,6 +276,7 @@ public class MenuPrincipal extends AppCompatActivity
 
         } else if (id == R.id.nav_CerrarSesion) {
             mAuth.signOut();
+            LoginManager.getInstance().logOut();
             Intent intent= new Intent(getBaseContext(), MainActivity.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 finishAffinity();

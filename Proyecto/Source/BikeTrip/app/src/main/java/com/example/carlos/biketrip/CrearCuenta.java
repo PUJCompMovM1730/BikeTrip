@@ -282,7 +282,7 @@ public class CrearCuenta extends AppCompatActivity {
             nuevoUsuario.setApellido(mUserLastName.getText().toString());
             nuevoUsuario.setCorreo(mUser.getText().toString());
             nuevoUsuario.setNombre(mUserName.getText().toString());
-            nuevoUsuario.setEdad(Integer.valueOf(mFechaNac.getText().toString()));
+            nuevoUsuario.setEdad(mFechaNac.getText().toString());
             nuevoUsuario.setEstatura(0);
             nuevoUsuario.setImagen("");
             nuevoUsuario.setPortada("");

@@ -1,9 +1,16 @@
 package com.example.carlos.biketrip;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.icu.text.DisplayContext;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +23,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,16 +36,60 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Array;
+import java.util.Arrays;
+
+import entidades.DownloadImage;
+import entidades.Usuario;
 
 public class MainActivity extends AppCompatActivity
         implements Main1Fragment.OnFragmentInteractionListener, Main2Fragment.OnFragmentInteractionListener,
@@ -71,6 +123,13 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private	FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser user;
+
+    //facebook login
+    LoginButton loginButton;
+    CallbackManager callbackManager;
+
+    public	static	final	String	PATH_USERS="users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,17 +149,16 @@ public class MainActivity extends AppCompatActivity
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-
         mAuth =	FirebaseAuth.getInstance();
         mAuthListener =	new	FirebaseAuth.AuthStateListener()	{
             @Override
             public	void	onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)	{
-                FirebaseUser user	=	firebaseAuth.getCurrentUser();
+                user	=	firebaseAuth.getCurrentUser();
                 if	(user	!=	null)	{
                     //	User	is	signed	in
                     Log.d(TAG,	"onAuthStateChanged:signed_in:"	+	user.getUid());
 
-
+                    loginButton.setVisibility(View.GONE);
                     Intent intent= new Intent(getBaseContext(), MenuPrincipal.class);
                     startActivity(intent);
 
@@ -110,6 +168,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
+
+
+        loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("email,public_profile," +
+                "user_birthday"));
+        callbackManager = CallbackManager.Factory.create();
 
 
         btnIniciarSesion = (Button)findViewById(R.id.btnIniciarSesion);
@@ -143,7 +207,127 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                signInUserFacebook(loginResult);
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getBaseContext(),"Se canceló el inicio de sesión",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(getBaseContext(),"Se generó error en el inicio de sesión",
+                        Toast.LENGTH_SHORT).show();
+                Log.i("FACEBOOK_ERROR",error.toString());
+            }
+        });
+
+        /*try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.carlos.biketrip",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }*/
+
+    }
+
+
+    private void signInUserFacebook(final LoginResult loginResult){
+        AccessToken accessToken = loginResult.getAccessToken();
+        AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken.getToken());
+
+        mAuth.signInWithCredential(authCredential).addOnCompleteListener(this,
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(!task.isSuccessful()){
+                            Toast.makeText(getBaseContext(),task.getException().toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            Log.i("ERROR_INICIAR_SESION", task.getException().toString());
+                        }
+                        else{
+
+                            if(user!=null){
+                                GraphRequest graphRequest =  GraphRequest.newMeRequest(
+                                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                                            @Override
+                                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                                Profile profile = Profile.getCurrentProfile();
+                                                insertarEnBaseDatos(object,profile);
+                                                //Solo si no existe el correo en el sistem
+
+                                            }
+                                        });
+                                Bundle parametros = new Bundle();
+                                parametros.putString("fields", "id,first_name,last_name,email,birthday");
+                                graphRequest.setParameters(parametros);
+                                graphRequest.executeAsync();
+
+                                Intent intent= new Intent(getBaseContext(), MenuPrincipal.class);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    private void  insertarEnBaseDatos(JSONObject object, Profile profile){
+        Usuario nuevoUsuario;
+        String uri,first_name, last_name, email, id, idFacebook,birthday;
+
+        try {
+            first_name = object.getString("first_name");
+            last_name = object.getString("last_name");
+            email = object.getString("email");
+            idFacebook = object.getString("id");
+            id = user.getUid();
+            birthday = object.getString("birthday");
+
+            uri = profile.getProfilePictureUri(100,100).toString();
+
+            nuevoUsuario = new Usuario();
+            nuevoUsuario.setApellido(last_name);
+            nuevoUsuario.setCorreo(email);
+            nuevoUsuario.setNombre(first_name);
+            nuevoUsuario.setEdad(birthday);
+            nuevoUsuario.setEstatura(0);
+            nuevoUsuario.setPortada("");
+            nuevoUsuario.setPeso(0);
+            nuevoUsuario.setTipo(1); //Por defecto es de tipo usuario normal
+
+            new DownloadImage(getBaseContext(),nuevoUsuario,id).execute(uri);
+
+            Log.i("DATOSFB","idfb: "+idFacebook+" id: "+id+" "+nuevoUsuario.toString());
+
+
+
+        } catch (Exception e) {
+            Log.i("ERROR_FB", e.toString());
+        }
+    }
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -177,7 +361,7 @@ public class MainActivity extends AppCompatActivity
                             }
                             else{
 
-                                FirebaseUser user	=	mAuth.getCurrentUser();
+                                user	=	mAuth.getCurrentUser();
                                 if(user!=null){	//Update	user	Info
                                     Intent intent= new Intent(getBaseContext(), MenuPrincipal.class);
                                     startActivity(intent);
@@ -187,8 +371,6 @@ public class MainActivity extends AppCompatActivity
                     });
         }
     }
-
-
 
     private	boolean validateForm()	{
         boolean valid	=	true;
@@ -208,8 +390,6 @@ public class MainActivity extends AppCompatActivity
         }
         return	valid;
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
