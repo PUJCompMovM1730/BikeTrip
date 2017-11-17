@@ -20,7 +20,7 @@ public class Punto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Intent intent = new Intent(getBaseContext(), Ruta.class);
-                Toast.makeText(getBaseContext(),"Punto creado",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),"PuntoEmpresa creado",Toast.LENGTH_LONG).show();
                 finish();
                 //startActivity(intent);
             }

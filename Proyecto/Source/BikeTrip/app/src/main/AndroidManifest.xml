@@ -82,7 +82,7 @@
         </activity>
         <activity android:name=".CrearRecorridosDestacados" />
         <activity android:name=".RecorridosDestacados" />
-        <activity android:name=".CrearPunto"></activity>
+        <activity android:name=".CrearPuntoEmpresa"></activity>
     </application>
 
 </manifest>

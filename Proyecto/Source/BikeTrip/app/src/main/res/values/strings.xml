@@ -6,10 +6,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="IniciarSesion">Iniciar Sesion</string>
     <string name="CrearCuenta">Crear Cuenta</string>
+    <string name="CrearPunto">Crear Punto</string>
+    <string name="CamaraPunto">Camara</string>
+    <string name="GaleriaPunto">Galeria</string>
     <string name="Nombre">Nombre</string>
     <string name="EjemploNombre">Carlos</string>
     <string name="EjemploNombre2">Maria</string>
     <string name="Apellido">Apellido</string>
+    <string name="Telefono">Telefono</string>
+    <string name="Longitud">Longitud</string>
+    <string name="Latitud">Latitud</string>
     <string name="Edad">mm/dd/yyyy</string>
     <string name="Correo">Correo</string>
     <string name="EjemploCorreo">example555@gmail.com</string>
@@ -55,6 +61,13 @@
         <item>Seleccione una opción</item>
         <item>Empresa</item>
         <item>Usuario</item>
+    </string-array>
+
+    <string-array name="duracionPunto">
+        <item>Seleccione una opción</item>
+        <item>Dia</item>
+        <item>Semana</item>
+        <item>Mes</item>
     </string-array>
 
     <string-array name="lista_agregar">

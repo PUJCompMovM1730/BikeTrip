@@ -1,10 +1,6 @@
 package com.example.carlos.biketrip;
 
-import android.app.FragmentManager;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,10 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
@@ -34,7 +28,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -118,7 +111,7 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
                 case 6:
                 {
-                    fragment = new CrearPunto();
+                    fragment = new CrearPuntoEmpresa();
                 }
                 break;
                 case 7:
@@ -204,7 +197,7 @@ public class MenuPrincipal extends AppCompatActivity
 
                     MenuItem nav_item2 = menuNav.findItem(R.id.nav_CrearRecorridosDestacados);
                     MenuItem nav_item3 = menuNav.findItem(R.id.nav_CrearPunto);
-                    
+
                     nav_item2.setEnabled(false);
                     nav_item2.setVisible(false);
 
@@ -318,7 +311,7 @@ public class MenuPrincipal extends AppCompatActivity
             fragementoSeleccionado = true;
 
         }else if (id == R.id.nav_CrearPunto) {
-            fragment = new CrearPunto();
+            fragment = new CrearPuntoEmpresa();
             intActividad=6;
             fragementoSeleccionado = true;
 
