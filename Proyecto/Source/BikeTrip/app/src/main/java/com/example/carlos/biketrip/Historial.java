@@ -83,9 +83,6 @@ public class Historial extends Fragment {
 
                 AdapterItem adapter = new AdapterItem(v.getContext(),R.layout.item_layout, rutas);
                 list.setAdapter(adapter);
-
-
-
             }
 
             @Override

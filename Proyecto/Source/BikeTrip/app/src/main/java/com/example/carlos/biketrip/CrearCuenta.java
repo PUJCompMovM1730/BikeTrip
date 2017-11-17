@@ -289,8 +289,6 @@ public class CrearCuenta extends AppCompatActivity {
 
     }
 
-
-
     public void signUp(){
         if(validateForm()){
 
@@ -351,9 +349,7 @@ public class CrearCuenta extends AppCompatActivity {
 
 
     public  void insertarEnBaseDatos(){
-
-
-        if(user!=null){
+          if(user!=null){
 
             nuevoUsuario = new Usuario();
             nuevoUsuario.setApellido(mUserLastName.getText().toString());
@@ -366,12 +362,8 @@ public class CrearCuenta extends AppCompatActivity {
             nuevoUsuario.setPortada("");
             nuevoUsuario.setPeso(0);
             nuevoUsuario.setTipo(posSpinner);
-
-
             myRef=database.getReference(PATH_USERS+user.getUid());
             myRef.setValue(nuevoUsuario);
-
-
             /*
             String	key	=	myRef.push().getKey();
             myRef=database.getReference(PATH_USERS+key);
