@@ -118,6 +118,11 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
                 case 6:
                 {
+                    fragment = new CrearPunto();
+                }
+                break;
+                case 7:
+                {
                     fragment = new Notificaciones();
                 }
                 break;
@@ -196,9 +201,15 @@ public class MenuPrincipal extends AppCompatActivity
                 }
                 if(actual.getTipo()==1){
                     Menu menuNav=navigationView.getMenu();
+
                     MenuItem nav_item2 = menuNav.findItem(R.id.nav_CrearRecorridosDestacados);
+                    MenuItem nav_item3 = menuNav.findItem(R.id.nav_CrearPunto);
+                    
                     nav_item2.setEnabled(false);
                     nav_item2.setVisible(false);
+
+                    nav_item3.setEnabled(false);
+                    nav_item3.setVisible(false);
                 }
 
             }
@@ -306,10 +317,15 @@ public class MenuPrincipal extends AppCompatActivity
             intActividad=5;
             fragementoSeleccionado = true;
 
-        } else if (id == R.id.nav_Notificaciones) {
+        }else if (id == R.id.nav_CrearPunto) {
+            fragment = new CrearPunto();
+            intActividad=6;
+            fragementoSeleccionado = true;
+
+        }else if (id == R.id.nav_Notificaciones) {
             fragment = new Notificaciones();
             fragementoSeleccionado = true;
-            intActividad=6;
+            intActividad=7;
         } else if (id == R.id.nav_Configuracion) {
 
         } else if (id == R.id.nav_CerrarSesion) {

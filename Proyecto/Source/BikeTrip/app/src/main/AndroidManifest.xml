@@ -81,7 +81,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CrearRecorridosDestacados" />
-        <activity android:name=".RecorridosDestacados"></activity>
+        <activity android:name=".RecorridosDestacados" />
+        <activity android:name=".CrearPunto"></activity>
     </application>
 
 </manifest>

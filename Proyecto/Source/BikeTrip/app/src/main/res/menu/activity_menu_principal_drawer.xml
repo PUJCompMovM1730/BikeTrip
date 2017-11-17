@@ -24,6 +24,10 @@
             android:id="@+id/nav_CrearRecorridosDestacados"
             android:icon="@drawable/crear_destacado"
             android:title="@string/CrearRecorridosDestacados" />
+        <item
+            android:id="@+id/nav_CrearPunto"
+            android:icon="@drawable/agregar_punto"
+            android:title="@string/AgregarPunto" />
 
 
         <item
