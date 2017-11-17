@@ -47,16 +47,18 @@
             android:layout_height="60dp"
             android:layout_gravity="right"
             android:scaleType="fitCenter"
-            android:src="@drawable/parar"
             android:id="@+id/parar"/>
+            <!--android:src="@drawable/parar"-->
+
 
         <ImageButton
             android:id="@+id/registrar"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="right"
-            android:scaleType="fitCenter"
-            android:src="@drawable/regis" />
+            android:scaleType="fitCenter"/>
+            <!--android:src="@drawable/regis"-->
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -131,11 +133,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
-
-
-
-
-
-
-
