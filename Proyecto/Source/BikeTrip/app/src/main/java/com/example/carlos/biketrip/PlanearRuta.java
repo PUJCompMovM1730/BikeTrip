@@ -223,7 +223,6 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                     String completo = fecha +" "+hora;
                     Log.i("COMPLETO",completo);
                     Date myDate = new Date();
-
                     try {
                         myDate = dateFormat.parse(completo);
 

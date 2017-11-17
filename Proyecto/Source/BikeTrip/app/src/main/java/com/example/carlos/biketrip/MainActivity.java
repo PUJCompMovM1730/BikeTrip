@@ -247,7 +247,6 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-
     private void  insertarEnBaseDatos(JSONObject object, Profile profile){
         Usuario nuevoUsuario;
         String uri,first_name, last_name, email, id, idFacebook,birthday;
@@ -282,9 +281,6 @@ public class MainActivity extends AppCompatActivity
             Log.i("ERROR_FB", e.toString());
         }
     }
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
