@@ -255,8 +255,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 mStorageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference mRef = mStorageRef.child(PATH_IMAGENES
                         +nuevoPunto.getIdEmpresa()+"/"+uriPunto.getLastPathSegment().trim());
-
-
+                
                 mRef.putFile(uriPunto)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
