@@ -8,14 +8,20 @@
     tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa">
 
 
+    <Button
+        android:id="@+id/btnConfirmarPunto"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/CrearPunto" />
+
     <fragment
         android:paddingTop="100dp"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/mapCrearPunto"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"
-        android:layout_weight="0.2"/>
+        android:layout_height="200dp"
+        tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"/>
 
     <ImageView
         android:id="@+id/ivImagenPunto"
@@ -24,6 +30,20 @@
         android:layout_height="100dp"
         />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etNombrePuntoEmpresa"
+        android:hint="@string/Nombre"
+        android:inputType="text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etTelefonoPuntoEmpresa"
+        android:hint="@string/Telefono"
+        android:inputType="number" />
+
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +51,10 @@
         android:entries="@array/duracionPunto"
         android:layout_margin="8dp">
     </Spinner>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvDuracionMarcador"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -44,8 +68,7 @@
             android:text="@string/CamaraPunto"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center"/>
+            android:layout_weight="0.5"/>
 
         <Button
             android:layout_width="150dp"
@@ -54,18 +77,10 @@
             android:text="@string/GaleriaPunto"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:gravity="center"/>
-
+            android:layout_weight="0.5"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnConfirmarPunto"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/CrearPunto" />
+
 
 
 </LinearLayout>

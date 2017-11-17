@@ -23,21 +23,21 @@
           }
         },
         {
-          "client_id": "274673925293-99bjifirsavga5bntq998blv8tro9mev.apps.googleusercontent.com",
+          "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "274673925293-0v8qtll9klk4g5r6go2cas043u6tt1hj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.sala_bd.ejerciciostorage",
             "certificate_hash": "9d7b96d38c0187415691659d33b38c7ee8144f4a"
           }
-        },
-        {
-          "client_id": "274673925293-6bqdu0n3amvtsilv3bbvr7s4djrflc0q.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTIJoTyasbUoq90FZsIKCtbfT1D6xyPTs"
+          "current_key": "AIzaSyDerpY6MJ8NOBCWmrlWhb2hh4hFZeFJz4E"
         }
       ],
       "services": {
@@ -48,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "274673925293-6bqdu0n3amvtsilv3bbvr7s4djrflc0q.apps.googleusercontent.com",
+              "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -67,6 +67,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "274673925293-75gdp0al73r2mmt9aipt7326momfokba.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carlos.biketrip",
+            "certificate_hash": "9907143922aeea1d86da77f933e9a01e37090bd4"
+          }
+        },
+        {
           "client_id": "274673925293-ufss5kjskv9fv220f5vnsi1ejkghoceh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -83,13 +91,13 @@
           }
         },
         {
-          "client_id": "274673925293-6bqdu0n3amvtsilv3bbvr7s4djrflc0q.apps.googleusercontent.com",
+          "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTIJoTyasbUoq90FZsIKCtbfT1D6xyPTs"
+          "current_key": "AIzaSyDerpY6MJ8NOBCWmrlWhb2hh4hFZeFJz4E"
         }
       ],
       "services": {
@@ -100,7 +108,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "274673925293-6bqdu0n3amvtsilv3bbvr7s4djrflc0q.apps.googleusercontent.com",
+              "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

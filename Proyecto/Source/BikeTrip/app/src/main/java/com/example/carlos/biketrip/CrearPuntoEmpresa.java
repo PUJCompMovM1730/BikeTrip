@@ -1,31 +1,20 @@
 package com.example.carlos.biketrip;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,13 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -49,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,19 +43,20 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import entidades.PuntoEmpresa;
 
-import static android.app.Activity.RESULT_OK;
 
 public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
+    private  LatLng coordenadaPunto;
+    Marker puntoMarkerEmpresa;
 
     public static final double lowerLeftLatitude = 4.475113;
     public static final double lowerLeftLongitude= -74.216308;
@@ -91,7 +75,9 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     ImageView imagenPunto;
-    //EditText etDireccion;
+    EditText etNombre;
+    EditText etTelefono;
+    TextView tvDuracionPunto;
     Button btnCamaraPunto;
     Button btnGaleriaPunto;
     Button btnAgregarPunto;
@@ -99,18 +85,26 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     int posSpinner;
     Uri uriPunto;
 
+    Date actual,futuro;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_punto_empresa);
 
+        coordenadaPunto = null;
+        posSpinner = -1;
 
         database=	FirebaseDatabase.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        posSpinner = -1;
+
         imagenPunto = findViewById(R.id.ivImagenPunto);
+        etTelefono = findViewById(R.id.etTelefonoPuntoEmpresa);
+        etNombre = findViewById(R.id.etNombrePuntoEmpresa);
+        tvDuracionPunto = findViewById(R.id.tvDuracionMarcador);
+
         btnCamaraPunto = findViewById(R.id.btnCamaraPunto);
         btnGaleriaPunto = findViewById(R.id.btnGaleriaPunto);
         btnAgregarPunto= findViewById(R.id.btnConfirmarPunto);
@@ -160,6 +154,19 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 posSpinner = i-1;
+
+                Calendar cal = Calendar.getInstance();
+
+                if(posSpinner==0)cal.add(Calendar.DAY_OF_YEAR, 1);
+                else if(posSpinner==1)cal.add(Calendar.WEEK_OF_YEAR, 1);
+                else if(posSpinner==2)cal.add(Calendar.MONTH, 1);
+
+                actual = Calendar.getInstance().getTime();
+                futuro = cal.getTime();
+
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                String fecha = dateFormat.format(futuro);
+                tvDuracionPunto.setText("El punto se vence: "+fecha);
             }
 
             @Override
@@ -204,6 +211,26 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
 
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(bogota).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+
+            public void onMapLongClick(LatLng latLng) {
+
+                if(puntoMarkerEmpresa!=null) puntoMarkerEmpresa.remove();
+
+                puntoMarkerEmpresa = googleMap.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+                puntoMarkerEmpresa.setVisible(true);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+
+                coordenadaPunto = latLng;
+            }
+        });
 
     }
 
@@ -212,33 +239,16 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
         if(validateForm()){
 
             try {
-                int t=1;
-                if(posSpinner==0)t=1;
-                else if(posSpinner==1)t=7;
-                else if(posSpinner==2)t=28;
-
-                LatLng coordenada;
-                long theFuture = System.currentTimeMillis() + (86400 * t * 1000);
-                double lat,lon;
-
-                lat = -1;
-                lon = -1;
-                Date actual,futuro;
-                actual = Calendar.getInstance().getTime();
-                futuro = new Date(theFuture);
-
-                coordenada = new LatLng(lat,lon);
 
                 nuevoPunto = new PuntoEmpresa();
 
-                nuevoPunto.setNombre("Nombre por defecto");
+                nuevoPunto.setNombre(etNombre.getText().toString());
                 nuevoPunto.setIdEmpresa(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                nuevoPunto.setTelefono("Numero por defecto");
-                nuevoPunto.setCoordenadas(coordenada);
+                nuevoPunto.setTelefono(etTelefono.getText().toString());
+                nuevoPunto.setCoordenadas(coordenadaPunto);
                 nuevoPunto.setFoto(uriPunto.getLastPathSegment().toString());
                 nuevoPunto.setHora_apertura(actual);
                 nuevoPunto.setHora_cierre(futuro);
-
 
 
 
@@ -269,6 +279,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 String	key	=	myRef.push().getKey();
                 myRef=database.getReference(PATH_PUNTOS+key);
                 myRef.setValue(nuevoPunto);
+                Log.i("DATOSPUNTNUEVO",nuevoPunto.toString());
 
                 Toast.makeText(getBaseContext(),
                         "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
@@ -286,6 +297,36 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
 
     private	boolean validateForm()	{
         boolean valid	=	true;
+
+        String	name	=	etNombre.getText().toString();
+        if	(TextUtils.isEmpty(name))	 {
+            etNombre.setError("Required.");
+            valid	=	false;
+        }	else	{
+            etNombre.setError(null);
+        }
+
+        String	tel	=	etTelefono.getText().toString();
+        if	(TextUtils.isEmpty(tel))	 {
+            etTelefono.setError("Required.");
+            valid	=	false;
+        }	else	{
+            etTelefono.setError(null);
+        }
+
+        if(coordenadaPunto==null){
+            valid = false;
+            Toast.makeText(getBaseContext(),"No ha seleccinado un punto",
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            double lat, lon;
+            lat = coordenadaPunto.latitude;
+            lon = coordenadaPunto.longitude;
+            if(lat<lowerLeftLatitude||lat>upperRightLatitude)valid = false;
+            if(lon<lowerLeftLongitude||lon>upperRigthLongitude)valid = false;
+            if(!valid)Toast.makeText(getBaseContext(),"Marcador fuera del rango",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         if(posSpinner>3 || posSpinner<0){
             valid = false;

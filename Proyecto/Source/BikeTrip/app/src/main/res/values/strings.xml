@@ -6,7 +6,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="IniciarSesion">Iniciar Sesion</string>
     <string name="CrearCuenta">Crear Cuenta</string>
-    <string name="CrearPunto">Crear Punto</string>
+    <string name="CrearPunto">+Crear Punto</string>
     <string name="CamaraPunto">Camara</string>
     <string name="GaleriaPunto">Galeria</string>
     <string name="Nombre">Nombre</string>
@@ -80,6 +80,7 @@
         <item>Publica</item>
         <item>Privada</item>
     </string-array>
+
     <string name="title_activity_mapa_ruta">Map</string>
 
 
