@@ -74,6 +74,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -113,6 +114,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_EVENTOS="eventos/";
     public	static	final	String	PATH_PUNTOS="puntos/";
+    public	static	final	String	PATH_PUNTOS_EMPRESAS="puntosEmpresa/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -766,7 +768,12 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public void loadTodo(){
         loadEventos();
         loadPuntos();
+        //loadPuntosEmpresas
+        loadPuntosEmpresas();
     }
+
+
+
     public void loadEventos() {
         myRef = database.getReference(PATH_EVENTOS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -826,6 +833,38 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
+
+    public void loadPuntosEmpresas() {
+        myRef = database.getReference(PATH_PUNTOS_EMPRESAS);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    PuntoEmpresa puntoEmpresa = singleSnapshot.getValue(PuntoEmpresa.class);
+
+                    Log.i("PuntoEmpresa: ", "Encontró empresa:	"+puntoEmpresa.toString());
+                    Date fechaActual = Calendar.getInstance().getTime();
+
+                    if(puntoEmpresa.getHora_cierre().after(fechaActual))
+                    {
+                        LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
+                                puntoEmpresa.getLongitud());
+                        String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
+                        mMap.addMarker(new MarkerOptions().position(coordenadaPunto).icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .title(informacion));
+
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+    }
 
 
 

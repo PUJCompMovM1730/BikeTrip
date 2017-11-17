@@ -10,7 +10,8 @@ import java.util.Date;
 
 public class PuntoEmpresa {
 
-    LatLng coordenadas;
+    double longitud;
+    double latitud;
     String idEmpresa;
     String nombre;
     String telefono;
@@ -18,12 +19,24 @@ public class PuntoEmpresa {
     Date hora_cierre;
     String foto;
 
-    public LatLng getCoordenadas() {
-        return coordenadas;
+    public PuntoEmpresa(){
+
     }
 
-    public void setCoordenadas(LatLng coordenadas) {
-        this.coordenadas = coordenadas;
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
     }
 
     public String getIdEmpresa() {
@@ -75,7 +88,7 @@ public class PuntoEmpresa {
     }
 
     public String toString(){
-        return idEmpresa+" - "+ nombre+" - " + telefono + " --- " + hora_apertura.toString()
+        return nombre+" - " + telefono + " --- " + hora_apertura.toString()
                 +" --- "+hora_cierre+" --- "+foto;
     }
 }

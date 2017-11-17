@@ -245,7 +245,9 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 nuevoPunto.setNombre(etNombre.getText().toString());
                 nuevoPunto.setIdEmpresa(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 nuevoPunto.setTelefono(etTelefono.getText().toString());
-                nuevoPunto.setCoordenadas(coordenadaPunto);
+                nuevoPunto.setLatitud(coordenadaPunto.latitude);
+                nuevoPunto.setLongitud(coordenadaPunto.longitude);
+                //nuevoPunto.setCoordenadas(coordenadaPunto);
                 nuevoPunto.setFoto(uriPunto.getLastPathSegment().toString());
                 nuevoPunto.setHora_apertura(actual);
                 nuevoPunto.setHora_cierre(futuro);
@@ -255,7 +257,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 mStorageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference mRef = mStorageRef.child(PATH_IMAGENES
                         +nuevoPunto.getIdEmpresa()+"/"+uriPunto.getLastPathSegment().trim());
-                
+
                 mRef.putFile(uriPunto)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
