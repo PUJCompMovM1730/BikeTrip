@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,55 +16,28 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etDireccionPunto"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:hint="Digite la direccion"/>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapCrearPunto"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"
+            android:layout_weight="0.2"/>
+
         <ImageView
             android:id="@+id/ivImagenPunto"
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="100dp"
             />
-
-        <!-- Nombre -->
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/PuntoNombre"
-            android:hint="@string/Nombre"
-            android:inputType="text"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Telefono-->
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/PuntoTelefono"
-            android:hint="@string/Telefono"
-            android:inputType="number"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/PuntoLongitud"
-                android:hint="@string/Longitud"
-                android:inputType="number"
-                android:layout_weight="0.5"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/PuntoLatitud"
-                android:hint="@string/Latitud"
-                android:inputType="number"
-                android:layout_weight="0.5"/>
-
-        </LinearLayout>
 
         <Spinner
             android:layout_width="match_parent"

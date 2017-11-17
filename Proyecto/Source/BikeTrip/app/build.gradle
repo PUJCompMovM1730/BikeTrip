@@ -41,6 +41,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+
+
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
@@ -51,10 +53,6 @@ configurations.all {
         }
     }
 }
-
-
-
-
 
 
 

@@ -1,31 +1,52 @@
 package com.example.carlos.biketrip;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,15 +57,28 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import entidades.PuntoEmpresa;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CrearPuntoEmpresa extends Fragment {
+public class CrearPuntoEmpresa extends Fragment{
+
+    MapView mMapView;
+    Address addressResult;
+    private GoogleMap googleMap;
+    Geocoder mGeocoder;
+
+    public static final double lowerLeftLatitude = 4.475113;
+    public static final double lowerLeftLongitude= -74.216308;
+    public static final double upperRightLatitude= 4.815938;
+    public static final double upperRigthLongitude= -73.997955;
+
 
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -57,10 +91,7 @@ public class CrearPuntoEmpresa extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     ImageView imagenPunto;
-    EditText etNombrePunto;
-    EditText etTelefonoPunto;
-    EditText etLongitudPunto;
-    EditText etLatitudPunto;
+    EditText etDireccion;
     Button btnCamaraPunto;
     Button btnGaleriaPunto;
     Button btnAgregarPunto;
@@ -69,10 +100,41 @@ public class CrearPuntoEmpresa extends Fragment {
     Uri uriPunto;
 
     View v;
+
+
+
     @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.activity_crear_punto_empresa, container, true);
+
+        mGeocoder = new Geocoder(getContext());
+        addressResult = null;
+        mMapView = (MapView) v.findViewById(R.id.mapCrearPunto);
+        mMapView.onCreate(savedInstanceState);
+
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+
+                // For dropping a marker at a point on the Map
+                LatLng sydney = new LatLng(-34, 151);
+                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+                // For zooming automatically to the location of the marker
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+
 
         database=	FirebaseDatabase.getInstance();
 
@@ -80,10 +142,7 @@ public class CrearPuntoEmpresa extends Fragment {
 
         posSpinner = -1;
         imagenPunto = v.findViewById(R.id.ivImagenPunto);
-        etNombrePunto = v.findViewById(R.id.PuntoNombre);
-        etTelefonoPunto = v.findViewById(R.id.PuntoTelefono);
-        etLongitudPunto = v.findViewById(R.id.PuntoLongitud);
-        etLatitudPunto = v.findViewById(R.id.PuntoLatitud);
+        etDireccion = v.findViewById(R.id.etDireccionPunto);
         btnCamaraPunto = v.findViewById(R.id.btnCamaraPunto);
         btnGaleriaPunto = v.findViewById(R.id.btnGaleriaPunto);
         btnAgregarPunto= v.findViewById(R.id.btnConfirmarPunto);
@@ -141,7 +200,58 @@ public class CrearPuntoEmpresa extends Fragment {
             }
         });
 
+
+
+        etDireccion.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i== EditorInfo.IME_ACTION_SEARCH)
+                {
+                    direccion();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    public void direccion(){
+
+        //Cuando se realice la busqueda
+        String addressString = etDireccion.getText().toString();
+
+        if (!addressString.isEmpty()) {
+            try {
+                List<Address> addresses = mGeocoder.getFromLocationName(
+                        addressString, 2,
+                        lowerLeftLatitude,
+                        lowerLeftLongitude,
+                        upperRightLatitude,
+                        upperRigthLongitude);
+
+                if (addresses != null && !addresses.isEmpty()) {
+                    addressResult = addresses.get(0);
+                    if (googleMap != null) {
+                        LatLng punto = new LatLng(addressResult.getLatitude(),
+                                addressResult.getLongitude());
+                        Marker puntoBuscado = googleMap.addMarker(new MarkerOptions().position(punto).
+                                icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).
+                                title(addressResult.getFeatureName())
+                                .snippet(addressResult.toString()) //Texto de información
+                                .alpha(0.5f)); //Transparencia);
+                        puntoBuscado.setVisible(true);
+
+
+                    }
+                } else {Toast.makeText(getActivity(), "Dirección no encontrada", Toast.LENGTH_SHORT).show();}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {Toast.makeText(getActivity(), "La dirección esta vacía", Toast.LENGTH_SHORT).show();}
     }
 
 
@@ -160,23 +270,24 @@ public class CrearPuntoEmpresa extends Fragment {
                 long theFuture = System.currentTimeMillis() + (86400 * t * 1000);
                 double lat,lon;
 
+                lat = addressResult.getLatitude();
+                lon = addressResult.getLongitude();
                 Date actual,futuro;
                 actual = Calendar.getInstance().getTime();
                 futuro = new Date(theFuture);
 
-                lat = Double.valueOf(etLatitudPunto.getText().toString());
-                lon = Double.valueOf(etLongitudPunto.getText().toString());
                 coordenada = new LatLng(lat,lon);
 
                 nuevoPunto = new PuntoEmpresa();
 
-                nuevoPunto.setNombre(etNombrePunto.getText().toString());
+                nuevoPunto.setNombre(addressResult.getFeatureName());
                 nuevoPunto.setIdEmpresa(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                nuevoPunto.setTelefono(etTelefonoPunto.getText().toString());
+                nuevoPunto.setTelefono(addressResult.getPhone());
                 nuevoPunto.setCoordenadas(coordenada);
                 nuevoPunto.setFoto(uriPunto.getLastPathSegment().toString());
                 nuevoPunto.setHora_apertura(actual);
                 nuevoPunto.setHora_cierre(futuro);
+
 
 
 
@@ -208,6 +319,8 @@ public class CrearPuntoEmpresa extends Fragment {
                 myRef=database.getReference(PATH_PUNTOS+key);
                 myRef.setValue(nuevoPunto);
 
+                Toast.makeText(getContext(),
+                        "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getContext(), MenuPrincipal.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -229,44 +342,15 @@ public class CrearPuntoEmpresa extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
 
+        if(addressResult==null){
+            valid = false;
+            Toast.makeText(getActivity(),"Dirección inválida",Toast.LENGTH_SHORT).show();
+        }
         if(uriPunto==null){
-            Toast.makeText(getContext(),"No se ha cargado la foto del punto",
+            Toast.makeText(getContext(),"No se ha seleccionado una imágen",
                     Toast.LENGTH_SHORT).show();
             valid = false;
         }
-
-        String	name	=	etNombrePunto.getText().toString();
-        if	(TextUtils.isEmpty(name))	 {
-            etNombrePunto.setError("Required.");
-            valid	=	false;
-        }	else	{
-            etNombrePunto.setError(null);
-        }
-
-        String	phone	=	etTelefonoPunto.getText().toString();
-        if	(TextUtils.isEmpty(phone))	 {
-            etTelefonoPunto.setError("Required.");
-            valid	=	false;
-        }	else	{
-            etTelefonoPunto.setError(null);
-        }
-
-        String	lat	=	etLatitudPunto.getText().toString();
-        if	(TextUtils.isEmpty(lat))	 {
-            etLatitudPunto.setError("Required.");
-            valid	=	false;
-        }	else	{
-            etLatitudPunto.setError(null);
-        }
-
-        String	lon	=	etLongitudPunto.getText().toString();
-        if	(TextUtils.isEmpty(lon))	 {
-            etLongitudPunto.setError("Required.");
-            valid	=	false;
-        }	else	{
-            etLongitudPunto.setError(null);
-        }
-
 
         return	valid;
     }
@@ -350,7 +434,6 @@ public class CrearPuntoEmpresa extends Fragment {
                 break;
         }
     }
-
 
 
 }
