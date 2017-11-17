@@ -53,6 +53,7 @@ public class MenuPrincipal extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     FirebaseUser user;
+    private Usuario actual;
 
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -66,6 +67,8 @@ public class MenuPrincipal extends AppCompatActivity
 
     Fragment fragment = null;
     boolean fragementoSeleccionado=false;
+    NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +83,10 @@ public class MenuPrincipal extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
         Intent i = getIntent();
         int ed = i.getIntExtra("intActividad",0);
         if (ed!=0){
@@ -103,9 +108,20 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
                 case 4:
                 {
+                    fragment = new RecorridosDestacados();
+                }
+                break;
+                case 5:
+                {
+                    fragment = new CrearRecorridosDestacados();
+                }
+                break;
+                case 6:
+                {
                     fragment = new Notificaciones();
                 }
                 break;
+
             }
             FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment);
@@ -143,6 +159,8 @@ public class MenuPrincipal extends AppCompatActivity
             loadUsers();
             loadRutas();
 
+
+
         }
     }
 
@@ -160,6 +178,7 @@ public class MenuPrincipal extends AppCompatActivity
                     u.setID(singleSnapshot.getKey());
 
                     if(u.getID().equals(user.getUid())){
+                        actual = u;
                         nombreU.setText(u.getNombre() + " " +u.getApellido());
 
                         if(!u.getImagen().equals("")){
@@ -175,6 +194,13 @@ public class MenuPrincipal extends AppCompatActivity
 
                     Log.i("DATOS ALMACENADOS USER",u.toString());
                 }
+                if(actual.getTipo()==1){
+                    Menu menuNav=navigationView.getMenu();
+                    MenuItem nav_item2 = menuNav.findItem(R.id.nav_CrearRecorridosDestacados);
+                    nav_item2.setEnabled(false);
+                    nav_item2.setVisible(false);
+                }
+
             }
             @Override
             public	void	onCancelled(DatabaseError databaseError)	{
@@ -214,6 +240,7 @@ public class MenuPrincipal extends AppCompatActivity
         });
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -269,10 +296,20 @@ public class MenuPrincipal extends AppCompatActivity
             intActividad=3;
             fragementoSeleccionado = true;
 
+        } else if (id == R.id.nav_RecorridosDestacados) {
+            fragment = new RecorridosDestacados();
+            intActividad=4;
+            fragementoSeleccionado = true;
+
+        }else if (id == R.id.nav_CrearRecorridosDestacados) {
+            fragment = new CrearRecorridosDestacados();
+            intActividad=5;
+            fragementoSeleccionado = true;
+
         } else if (id == R.id.nav_Notificaciones) {
             fragment = new Notificaciones();
             fragementoSeleccionado = true;
-            intActividad=4;
+            intActividad=6;
         } else if (id == R.id.nav_Configuracion) {
 
         } else if (id == R.id.nav_CerrarSesion) {
@@ -286,15 +323,8 @@ public class MenuPrincipal extends AppCompatActivity
         }
 
         if(fragementoSeleccionado){
-
-            startActivity(new Intent(getBaseContext(),MenuPrincipal.class).putExtra("intActividad",intActividad));
-          /*  FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, fragment);
-        //    transaction.addToBackStack(null);
-           /* getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
-                    fragment).commit();
-            // Commit the transaction
-            transaction.commit();*/
+            startActivity(new Intent(getBaseContext(),MenuPrincipal.class)
+                    .putExtra("intActividad",intActividad));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
