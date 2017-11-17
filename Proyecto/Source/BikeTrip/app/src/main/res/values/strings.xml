@@ -36,6 +36,8 @@
     <string name="Amigos">Amigos</string>
     <string name="Notificaciones">Notificaciones</string>
     <string name="Configuracion">Configuracion</string>
+    <string name="RecorridosDestacados">RecorridosDestacados</string>
+    <string name="CrearRecorridosDestacados">CrearRecorridosDestacados</string>
     <string name="CerrarSesion">Cerrar Sesion</string>
 
 

@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BikeTrip.iml" filepath="$PROJECT_DIR$/BikeTrip.iml" />
-      <module fileurl="file://C:\Users\Magda\Documents\CompuMovil\Clone\BikeTrip\Proyecto\Source\BikeTrip\BikeTrip.iml" filepath="C:\Users\Magda\Documents\CompuMovil\Clone\BikeTrip\Proyecto\Source\BikeTrip\BikeTrip.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Magda\Documents\CompuMovil\Clone\BikeTrip\Proyecto\Source\BikeTrip\app\app.iml" filepath="C:\Users\Magda\Documents\CompuMovil\Clone\BikeTrip\Proyecto\Source\BikeTrip\app\app.iml" />
     </modules>
   </component>
 </project>
