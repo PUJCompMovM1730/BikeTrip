@@ -1,88 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa">
 
 
+    <fragment
+        android:paddingTop="100dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/mapCrearPunto"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"
+        android:layout_weight="0.2"/>
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/ivImagenPunto"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        />
+
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:id="@+id/spinnerDuracionPunto"
+        android:entries="@array/duracionPunto"
+        android:layout_margin="8dp">
+    </Spinner>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etDireccionPunto"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:hint="Digite la direccion"/>
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapCrearPunto"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"
-            android:layout_weight="0.2"/>
-
-        <ImageView
-            android:id="@+id/ivImagenPunto"
-            android:layout_gravity="center"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinnerDuracionPunto"
-            android:entries="@array/duracionPunto"
-            android:layout_margin="8dp">
-        </Spinner>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnCamaraPunto"
-                android:text="@string/CamaraPunto"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="8dp"
-                android:gravity="center"/>
-
-            <Button
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnGaleriaPunto"
-                android:text="@string/GaleriaPunto"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center"/>
-
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnConfirmarPunto"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/CrearPunto" />
+            android:id="@+id/btnCamaraPunto"
+            android:text="@string/CamaraPunto"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"/>
 
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnGaleriaPunto"
+            android:text="@string/GaleriaPunto"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="center"/>
 
     </LinearLayout>
 
-</ScrollView>
+    <Button
+        android:id="@+id/btnConfirmarPunto"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/CrearPunto" />
+
+
+</LinearLayout>

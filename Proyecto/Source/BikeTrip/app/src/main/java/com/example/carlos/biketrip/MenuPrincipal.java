@@ -111,7 +111,8 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
                 case 6:
                 {
-                    fragment = new CrearPuntoEmpresa();
+                    //fragment = new CrearPuntoEmpresa();
+
                 }
                 break;
                 case 7:
@@ -121,11 +122,13 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
 
             }
+
             FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment);
             transaction.commit();
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
+
         }else{
             FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, new MapaRuta());
@@ -311,9 +314,12 @@ public class MenuPrincipal extends AppCompatActivity
             fragementoSeleccionado = true;
 
         }else if (id == R.id.nav_CrearPunto) {
-            fragment = new CrearPuntoEmpresa();
+            //fragment = new CrearPuntoEmpresa();
             intActividad=6;
-            fragementoSeleccionado = true;
+            //fragementoSeleccionado = true;
+            Intent intent = new Intent(getBaseContext(),CrearPuntoEmpresa.class);
+            startActivity(intent);
+
 
         }else if (id == R.id.nav_Notificaciones) {
             fragment = new Notificaciones();

@@ -113,6 +113,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_EVENTOS="eventos/";
     public	static	final	String	PATH_PUNTOS="puntos/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
