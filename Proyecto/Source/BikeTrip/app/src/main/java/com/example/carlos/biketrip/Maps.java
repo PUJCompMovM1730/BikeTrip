@@ -408,6 +408,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                         }
 
+                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
                         loadTodo();
@@ -884,8 +885,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             }
         });
     }
-
-
 
     public void loadPuntosEmpresas() {
         myRef = database.getReference(PATH_PUNTOS_EMPRESAS);
