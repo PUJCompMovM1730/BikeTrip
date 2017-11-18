@@ -91,6 +91,7 @@ import java.util.List;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
+    int cantidadActualizaciones;
     private Marker puntoActual;
     private Marker puntoFinal;
     private GoogleMap mMap;
@@ -138,6 +139,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         //Inicialización en	onCreate()
         mAuth =	FirebaseAuth.getInstance();
        // endLatLng=null;
+        cantidadActualizaciones = 0;
         puntoActual =null;
         puntoFinal = null;
         reiniciar=true;
@@ -400,11 +402,16 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                         fromResource(R.drawable.bike2)));
                         puntoActual.setVisible(true);
                         //mMap.addMarker(new MarkerOptions().position(ge).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
-                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(ge));
-                        //mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+
+                        if(cantidadActualizaciones==0){
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(ge));
+                            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        }
+
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
                         loadTodo();
+                        cantidadActualizaciones++;
                         //  Toast.makeText(getBaseContext(),"Lat: "+lat+", Long:"+lon, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -460,6 +467,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
             }
         });
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(4.662039,-74.119431)));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -811,7 +822,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public void loadTodo(){
         loadEventos();
         loadPuntos();
-        //loadPuntosEmpresas
         loadPuntosEmpresas();
     }
 
@@ -889,8 +899,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Date fechaActual = Calendar.getInstance().getTime();
 
                     if(puntoEmpresa.getHora_cierre().after(fechaActual)){
-                        Log.i("entrooif",PATH_IMAGENES
-                                +puntoEmpresa.getIdEmpresa()+"/"+puntoEmpresa.getFoto());
                         final LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
                                 puntoEmpresa.getLongitud());
                         final String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
@@ -909,7 +917,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                 // Use the bytes to display the image
                                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes,
                                         0, bytes.length);
-                                Bitmap resize = getResizedBitmap(bmp,20,20);
+                                Bitmap resize = getResizedBitmap(bmp,30,30);
                                 mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
                                         .icon(BitmapDescriptorFactory.fromBitmap(resize))
                                         .title(informacion));
@@ -920,14 +928,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Handle any errors
-                                Log.i("ERRRROOOOOOOOR",exception.toString());
+                                Log.i("ERROR",exception.toString());
                             }
                         });
-
-                        /*mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
-                                .icon(BitmapDescriptorFactory
-                                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                .title(informacion));*/
 
                     }
                 }
