@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,6 +36,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import entidades.*;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -64,11 +70,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,6 +91,8 @@ import java.util.List;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
+    private Marker puntoActual;
+    private Marker puntoFinal;
     private GoogleMap mMap;
     Polyline line;
     Context context;
@@ -115,14 +127,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     public	static	final	String	PATH_EVENTOS="eventos/";
     public	static	final	String	PATH_PUNTOS="puntos/";
     public	static	final	String	PATH_PUNTOS_EMPRESAS="puntosEmpresa/";
+    public	static	final	String	PATH_IMAGENES="images/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
         //Inicialización en	onCreate()
         mAuth =	FirebaseAuth.getInstance();
        // endLatLng=null;
+        puntoActual =null;
+        puntoFinal = null;
         reiniciar=true;
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
@@ -151,15 +168,36 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         lon = location.getLongitude();
                         startLatLng = new LatLng(lat, lon);
                         endLatLng = new LatLng(latF, lonF);
-                        mMap.addMarker(new MarkerOptions().position(endLatLng).icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+
+                        if(puntoFinal!=null) puntoFinal.remove();
+
+                        puntoFinal = mMap.addMarker(new MarkerOptions().position(endLatLng).
+                                icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        puntoFinal.setVisible(true);
+
+                        /*mMap.addMarker(new MarkerOptions().position(endLatLng).
+                                icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));*/
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(endLatLng));
                         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                         double d = distance(lat, lon, latF, lonF);
                         txtduracion.setText(String.valueOf(d));
                         double tiemp = d / 30 * 60;
                         loadTodo();
-                        mMap.addMarker(new MarkerOptions().position(startLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
+
+                        if(puntoActual!=null) puntoActual.remove();
+                        puntoActual = mMap.addMarker(new MarkerOptions().position(startLatLng).
+                                icon(BitmapDescriptorFactory.
+                                        fromResource(R.drawable.bike2)));
+                        puntoActual.setVisible(true);
+
+
+
+                        /*mMap.addMarker(new MarkerOptions().position(startLatLng).
+                                icon(BitmapDescriptorFactory.
+                                fromResource(R.drawable.bike2)));*/
                         txttiempo.setText(String.valueOf(tiemp));
 
                         String urlTopass = makeURL(lat, lon, latF,
@@ -356,9 +394,14 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         lon = location.getLongitude();
                         // Agregar un marcador en bogotá
                         LatLng ge = new LatLng(lat,lon);
-                        mMap.addMarker(new MarkerOptions().position(ge).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(ge));
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        if(puntoActual!=null) puntoActual.remove();
+                        puntoActual = mMap.addMarker(new MarkerOptions().position(ge).
+                                icon(BitmapDescriptorFactory.
+                                        fromResource(R.drawable.bike2)));
+                        puntoActual.setVisible(true);
+                        //mMap.addMarker(new MarkerOptions().position(ge).icon(BitmapDescriptorFactory.fromResource(R.drawable.bike2)));
+                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(ge));
+                        //mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
                         loadTodo();
@@ -845,14 +888,46 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Log.i("PuntoEmpresa: ", "Encontró empresa:	"+puntoEmpresa.toString());
                     Date fechaActual = Calendar.getInstance().getTime();
 
-                    if(puntoEmpresa.getHora_cierre().after(fechaActual))
-                    {
-                        LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
+                    if(puntoEmpresa.getHora_cierre().after(fechaActual)){
+                        Log.i("entrooif",PATH_IMAGENES
+                                +puntoEmpresa.getIdEmpresa()+"/"+puntoEmpresa.getFoto());
+                        final LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
                                 puntoEmpresa.getLongitud());
-                        String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
-                        mMap.addMarker(new MarkerOptions().position(coordenadaPunto).icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                .title(informacion));
+                        final String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
+
+                        StorageReference mStorageRef;
+                        mStorageRef = FirebaseStorage.getInstance().
+                                getReference(PATH_IMAGENES +puntoEmpresa.getIdEmpresa()
+                                        +"/"+puntoEmpresa.getFoto());
+
+
+
+                        mStorageRef.getBytes(Long.MAX_VALUE)
+                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                // Use the bytes to display the image
+                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes,
+                                        0, bytes.length);
+                                Bitmap resize = getResizedBitmap(bmp,20,20);
+                                mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
+                                        .icon(BitmapDescriptorFactory.fromBitmap(resize))
+                                        .title(informacion));
+
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                                Log.i("ERRRROOOOOOOOR",exception.toString());
+                            }
+                        });
+
+                        /*mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
+                                .icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .title(informacion));*/
 
                     }
                 }
@@ -866,7 +941,22 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         });
     }
 
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
 
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
 
 
 }
