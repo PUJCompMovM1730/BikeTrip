@@ -1,6 +1,7 @@
 package com.example.carlos.biketrip;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,14 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -61,6 +54,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import entidades.FacebookShare;
 import entidades.PuntoEmpresa;
 
 
@@ -77,7 +71,6 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     public static final double upperRigthLongitude= -73.997955;
 
     CallbackManager callbackManager;
-    ShareDialog shareDialog;
     FirebaseDatabase database;
     DatabaseReference myRef;
     StorageReference mStorageRef;
@@ -101,7 +94,6 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     Uri uriPunto;
 
     Date actual,futuro;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +183,8 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
         });
 
         callbackManager = CallbackManager.Factory.create();
-        shareDialog = new ShareDialog(this);
+        //shareDialog = new ShareDialog(this);
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapCrearPunto);
@@ -309,76 +302,38 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 btnCamaraPunto.setVisibility(View.GONE);
                 btnGaleriaPunto.setVisibility(View.GONE);
 
-                if(ShareDialog.canShow(SharePhotoContent.class)){
 
-                    final CharSequence[] items = { "Compartir", "Cancelar"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            CrearPuntoEmpresa.this);
-                    builder.setTitle("Opciones para compartir");
-
-                    builder.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int item) {
-                            if (items[item].equals("Compartir")) {
-                                SharePhoto photo = new SharePhoto.Builder()
-                                        .setBitmap(image)
-                                        .build();
-                                SharePhotoContent content = new SharePhotoContent.Builder()
-                                        .addPhoto(photo)
-                                        .build();
-
-                                shareDialog.show(content);
+                final Activity activity = this;
+                final CharSequence[] items = { "Compartir", "Cancelar"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        CrearPuntoEmpresa.this);
+                builder.setTitle("Opciones para compartir");
 
 
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (items[item].equals("Compartir")) {
 
-                                shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+                            FacebookShare facebookShare = new FacebookShare(activity,getBaseContext()
+                                    ,callbackManager, "Punto añadido satisfactoriamente");
 
-                                    @Override
-                                    public void onSuccess(Sharer.Result result) {
+                            facebookShare.sharePhoto(image);
 
-                                        Toast.makeText(getBaseContext(),
-                                                "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
+                        } else if (items[item].equals("Cancelar")) {
+                            dialog.dismiss();
+                            Toast.makeText(getBaseContext(),
+                                    "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
 
-
-                                        Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onCancel() {
-
-                                        Toast.makeText(getBaseContext(),
-                                                "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onError(FacebookException error) {
-                                        Toast.makeText(CrearPuntoEmpresa.this,
-                                                "Error inesperado al compartir",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-
-
-                                });
-
-                            } else if (items[item].equals("Cancelar")) {
-                                dialog.dismiss();
-                                Toast.makeText(getBaseContext(),
-                                        "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-
+                            Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         }
-                    });
-                    builder.show();
-                }
+
+                    }
+                });
+                builder.show();
+
             }catch (Exception e){Log.i("ErrorCrearPunto", e.toString());}
         }
     }
