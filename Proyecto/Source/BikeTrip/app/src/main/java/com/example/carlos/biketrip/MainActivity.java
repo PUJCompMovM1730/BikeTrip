@@ -24,6 +24,7 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     String TAG="TAG" ;
 
+    ProgressBar progressBar;
     Button btnIniciarSesion;
     Button btnCrearCuenta;
     EditText mUser;
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
+
+
         mAuth =	FirebaseAuth.getInstance();
         mAuthListener =	new	FirebaseAuth.AuthStateListener()	{
             @Override
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity
         };
 
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_barMain);
         loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("email,public_profile," +
                 "user_birthday"));
@@ -212,11 +217,18 @@ public class MainActivity extends AppCompatActivity
         AccessToken accessToken = loginResult.getAccessToken();
         AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken.getToken());
 
+        progressBar.setVisibility(View.VISIBLE);
+        btnCrearCuenta.setVisibility(View.GONE);
+        btnIniciarSesion.setVisibility(View.GONE);
+
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
+                            progressBar.setVisibility(View.GONE);
+                            btnCrearCuenta.setVisibility(View.VISIBLE);
+                            btnIniciarSesion.setVisibility(View.VISIBLE);
                             Toast.makeText(getBaseContext(),task.getException().toString(),
                                     Toast.LENGTH_SHORT).show();
                             Log.i("ERROR_INICIAR_SESION", task.getException().toString());

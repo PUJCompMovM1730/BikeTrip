@@ -111,6 +111,16 @@
             android:textColorHint="@color/colorGris" />
 
 
+        <ProgressBar
+            android:layout_below="@+id/iWLogo"
+            android:id="@+id/progress_barMain"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
 
     </RelativeLayout>
 

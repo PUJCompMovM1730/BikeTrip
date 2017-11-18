@@ -1,6 +1,7 @@
 package com.example.carlos.biketrip;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,10 +21,20 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,13 +69,15 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     private GoogleMap googleMap;
     private  LatLng coordenadaPunto;
     Marker puntoMarkerEmpresa;
+    Bitmap image;
 
     public static final double lowerLeftLatitude = 4.475113;
     public static final double lowerLeftLongitude= -74.216308;
     public static final double upperRightLatitude= 4.815938;
     public static final double upperRigthLongitude= -73.997955;
 
-
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
     FirebaseDatabase database;
     DatabaseReference myRef;
     StorageReference mStorageRef;
@@ -74,6 +88,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     final static int IMAGE_PICKER_REQUEST = 3;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    ProgressBar progressBar;
     ImageView imagenPunto;
     EditText etNombre;
     EditText etTelefono;
@@ -99,7 +114,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
         database=	FirebaseDatabase.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-
+        progressBar = findViewById(R.id.progress_barCrearPunto);
         imagenPunto = findViewById(R.id.ivImagenPunto);
         etTelefono = findViewById(R.id.etTelefonoPuntoEmpresa);
         etNombre = findViewById(R.id.etNombrePuntoEmpresa);
@@ -151,7 +166,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
             }
         });
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
+
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 posSpinner = i-1;
 
@@ -175,12 +190,17 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapCrearPunto);
         mapFragment.getMapAsync(this);
 
 
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap mMap) {
@@ -254,6 +274,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
 
 
 
+
                 mStorageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference mRef = mStorageRef.child(PATH_IMAGENES
                         +nuevoPunto.getIdEmpresa()+"/"+uriPunto.getLastPathSegment().trim());
@@ -282,19 +303,88 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                 myRef.setValue(nuevoPunto);
                 Log.i("DATOSPUNTNUEVO",nuevoPunto.toString());
 
-                Toast.makeText(getBaseContext(),
-                        "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+
+                progressBar.setVisibility(View.VISIBLE);
+                btnAgregarPunto.setVisibility(View.GONE);
+                btnCamaraPunto.setVisibility(View.GONE);
+                btnGaleriaPunto.setVisibility(View.GONE);
+
+                if(ShareDialog.canShow(SharePhotoContent.class)){
+
+                    final CharSequence[] items = { "Compartir", "Cancelar"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            CrearPuntoEmpresa.this);
+                    builder.setTitle("Opciones para compartir");
+
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (items[item].equals("Compartir")) {
+                                SharePhoto photo = new SharePhoto.Builder()
+                                        .setBitmap(image)
+                                        .build();
+                                SharePhotoContent content = new SharePhotoContent.Builder()
+                                        .addPhoto(photo)
+                                        .build();
+
+                                shareDialog.show(content);
 
 
+
+                                shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+
+                                    @Override
+                                    public void onSuccess(Sharer.Result result) {
+
+                                        Toast.makeText(getBaseContext(),
+                                                "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
+
+
+                                        Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancel() {
+
+                                        Toast.makeText(getBaseContext(),
+                                                "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onError(FacebookException error) {
+                                        Toast.makeText(CrearPuntoEmpresa.this,
+                                                "Error inesperado al compartir",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                });
+
+                            } else if (items[item].equals("Cancelar")) {
+                                dialog.dismiss();
+                                Toast.makeText(getBaseContext(),
+                                        "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+
+                        }
+                    });
+                    builder.show();
+                }
             }catch (Exception e){Log.i("ErrorCrearPunto", e.toString());}
-
-
-
         }
     }
+
+
+
 
     private	boolean validateForm()	{
         boolean valid	=	true;
@@ -393,6 +483,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode) {
             case IMAGE_PICKER_REQUEST:
@@ -406,6 +497,7 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                                 openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                         imagenPunto.setImageBitmap(selectedImage);
+                        image = selectedImage;
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -417,10 +509,13 @@ public class CrearPuntoEmpresa extends FragmentActivity implements OnMapReadyCal
                     uriPunto = data.getData();
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    image = imageBitmap;
                     imagenPunto.setImageBitmap(imageBitmap);
                 }
                 break;
+
         }
+
     }
 
 
