@@ -304,7 +304,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         startLatLng = new LatLng(lat,lon);
                         i.putExtra("Lat",lat);
                         i.putExtra("Lon",lon);
-                       Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
+                    //   Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
                         reiniciar=true;
                         startActivity(i);
                     }else{

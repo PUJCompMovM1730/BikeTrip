@@ -93,7 +93,7 @@ public class Evento extends AppCompatActivity {
         Intent i = getIntent();
         e.setLat(i.getExtras().getDouble("Lat"));
         e.setLon(i.getExtras().getDouble("Lon"));
-        Toast.makeText(getBaseContext(),"Lat aca :"+e.getLat()+"Y Lon: "+e.getLon(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getBaseContext(),"Lat aca :"+e.getLat()+"Y Lon: "+e.getLon(), Toast.LENGTH_SHORT).show();
         e.setIdCreador(mAuth.getCurrentUser().getUid());
 
         enviar.setOnClickListener(new View.OnClickListener() {
