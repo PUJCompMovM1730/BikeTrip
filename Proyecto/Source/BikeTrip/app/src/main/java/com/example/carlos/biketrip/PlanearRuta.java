@@ -146,6 +146,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                                 r.setLonInicio( position.longitude);
                                 Toast.makeText(getBaseContext(),"Dirección de incio ingresada correctamente ", Toast.LENGTH_LONG).show();
                             } else {
+                                r.setLatInicio(-1);
                                 Toast.makeText(PlanearRuta.this, "Dirección no encontrada", Toast.LENGTH_SHORT).show();}
                         } catch (IOException e) {
                             e.printStackTrace();
