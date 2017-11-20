@@ -75,6 +75,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
         txtNombre = (EditText)findViewById(R.id.txtNombre);
         txtFechaRP = (EditText) findViewById(R.id.fechaRP);
         txtHoraRP = (EditText) findViewById(R.id.horaRP);
+        txtFinal = (EditText)findViewById(R.id.txtFinal);
         mAuth =	FirebaseAuth.getInstance();
         r.setIdUsuario(mAuth.getCurrentUser().getUid());
         txtInicio = (EditText)findViewById(R.id.txtInicio);
@@ -86,8 +87,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
         r.setPrivada(true);
         Intent i = getIntent();
         int ed = i.getIntExtra("Actividad",0);
-        if (ed==1)
-        {
+        if (ed==1){
             RutaEnt a = new RutaEnt();
             a = (RutaEnt) i.getExtras().getSerializable("Ruta");
             txtNombre.setText(a.getNombre());
@@ -95,17 +95,19 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
             long lnMilisegundos = a.getTiempo().getTime();
             java.sql.Date sqlDate = new java.sql.Date(lnMilisegundos);
             java.sql.Time sqlTime = new java.sql.Time(lnMilisegundos);
-
             txtFechaRP.setText(sqlDate.toString());
             txtHoraRP.setText(sqlTime.toString());
             if(a.isPrivada())
             {
                 spinner.setSelection(2);
+            }else{
+                spinner.setSelection(1);
             }
-
-
-            spinner.setSelection(1);
-
+        }
+        if (ed==2){
+            r = (RutaEnt) i.getExtras().getSerializable("Ruta");
+            txtInicio.setText(r.getInicio());
+            txtFinal.setText(r.getFin());
         }
         spinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
@@ -158,7 +160,6 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                 return false;
             }
         });
-        txtFinal = (EditText)findViewById(R.id.txtFinal);
         txtFinal.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -182,6 +183,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                                 r.setLatFinal( position.latitude);
                                 r.setLonFinal(position.longitude);
                             } else {
+                                r.setLatFinal(-1);
                                 Toast.makeText(PlanearRuta.this, "Dirección no encontrada", Toast.LENGTH_SHORT).show();}
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -211,7 +213,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                if(txtDesc.getText().toString().equals("")||txtNombre.getText().toString().equals("")||txtInicio.getText().toString().equals("")||txtFinal.getText().toString().equals("")){
+                if(r.getLatFinal()==-1||r.getLatInicio()==-1||txtDesc.getText().toString().equals("")||txtNombre.getText().toString().equals("")||txtInicio.getText().toString().equals("")||txtFinal.getText().toString().equals("")){
                     Toast.makeText(PlanearRuta.this, "Por favor ingrese todos los datos", Toast.LENGTH_SHORT).show();
                 }else {
                     r.setDescripcion(txtDesc.getText().toString());

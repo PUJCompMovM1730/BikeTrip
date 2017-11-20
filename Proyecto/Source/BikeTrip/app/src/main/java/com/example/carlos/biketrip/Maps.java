@@ -106,7 +106,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private LocationRequest mLocationRequest;
     private double lat = 0, lon=0;
     EditText txtDireccion;
-    TextView txInfo;
     TextView txttiempo;
     TextView txtduracion;
     public static final double lowerLeftLatitude = 4.475113;
@@ -134,8 +133,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-
         //Inicialización en	onCreate()
         mAuth =	FirebaseAuth.getInstance();
        // endLatLng=null;
@@ -147,6 +144,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         txtduracion = (TextView) findViewById(R.id.duracionREC);
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
         mRutas = (Button) findViewById(R.id.btnMasrutas);
+        txtDireccion = (EditText)findViewById(R.id.texto);
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,17 +268,20 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Toast.makeText(getBaseContext(),"Para guardar esta ruta para el futuro, ingrese los datos de la misma", Toast.LENGTH_LONG);
                 }else{
                     Intent i = new Intent(getBaseContext(),PlanearRuta.class);
-                    Bundle b = new Bundle();
-                    b.putDouble("LatI",startLatLng.latitude);
-                    b.putDouble("LonI",startLatLng.longitude);
-                    b.putBoolean("Fin",false);
-                    if(endLatLng!=null)
-                    {
-                        b.putDouble("LatF",endLatLng.latitude);
-                        b.putDouble("LonF",endLatLng.longitude);
+                    RutaEnt r = new RutaEnt();
+                    i.putExtra("Actividad",2);
+                    r.setLatInicio(startLatLng.latitude);
+                    r.setLonInicio(startLatLng.longitude);
+                    r.setLatFinal(endLatLng.latitude);
+                    r.setLonFinal(endLatLng.longitude);
+                    r.setInicio("Actual");
+                    if(txtDireccion.getText().equals("")){
+                        r.setFin(txtDireccion.getText().toString());
+                    }else{
+                        r.setFin("Ubicación seleccionada");
                     }
-                    i.putExtra("Bundle",b);
                     reiniciar=true;
+                    i.putExtra("Ruta",r);
                     startActivity(i);
                 }
             }
@@ -331,7 +332,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         context = Maps.this;
-        txtDireccion = (EditText)findViewById(R.id.texto);
         txtDireccion.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
