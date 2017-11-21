@@ -54,16 +54,4 @@ configurations.all {
     }
 }
 
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 5cdb8b46de44dce5464edb766300ad97f29b6127
 apply plugin: 'com.google.gms.google-services'

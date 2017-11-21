@@ -71,11 +71,8 @@ public class ComentarPuntos extends AppCompatActivity {
         database1 = FirebaseDatabase.getInstance();
         usuarios = new ArrayList<Usuario>();
         mAuth =	FirebaseAuth.getInstance();
-
         adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
-
         punto = (PuntoEnt) getIntent().getSerializableExtra("Punto");
-
         Log.w("HOLA",punto.getIdPunto());
         myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef = database.getReference(PATH_COMENTARIOS);
@@ -87,6 +84,7 @@ public class ComentarPuntos extends AppCompatActivity {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     ComentarioEnt myComent =	singleSnapshot.getValue(ComentarioEnt.class);
                     Log.i("Punto: ", "Encontró punto:	");
+
 
                     if(myComent.getIdPunto().equalsIgnoreCase(punto.getIdPunto()))
                     {
@@ -103,58 +101,60 @@ public class ComentarPuntos extends AppCompatActivity {
 
                     }
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
-            }
-        });
-        rb.setNumStars(5);
-        rb.setIsIndicator(true);
-        if(punto.getCanUsuarios()==0)
-        {
-
-            rb.setRating((float)0);
-
-        }else{
-            rb.setRating(punto.getPuntaje());
-        }
-        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-        myRef = database.getReference(PATH_USUARIOS);
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Usuario myUsuario =	singleSnapshot.getValue(Usuario.class);
-                    Log.i("Usuario: ", "Encontró Usuario:	");
-                    usuarios.add(myUsuario);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
-            }
-        });
-
-        Log.w(".:","TAMAÑO2 "+comentarios.size());
-
-        Log.w(".:","TAMAÑO "+usuarios.size());
-        for(ComentarioEnt e: comentarios)
-        {
-            Log.w("ALLI","Econtre "+e.getIdUsuarioC());
-            for(Usuario u: usuarios)
-            {
-                if(e.getIdUsuarioC().compareTo(u.getID())==0)
+                rb.setNumStars(5);
+                rb.setIsIndicator(true);
+                if(punto.getCanUsuarios()==0)
                 {
-                    Toast.makeText(getBaseContext(),"Baje USuario",Toast.LENGTH_SHORT).show();
-                    String com = u.getNombre()+", dijo: "+e.getComentario();
-                    adaptador.add(com);
+
+                    rb.setRating((float)0);
+
+                }else{
+                    rb.setRating(punto.getPuntaje());
                 }
+                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef = database.getReference(PATH_USUARIOS);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            Usuario myUsuario =	singleSnapshot.getValue(Usuario.class);
+                            Log.i("Usuario: ", "Encontró Usuario:	");
+                            usuarios.add(myUsuario);
+                        }
+                        Log.w(".:","TAMAÑO2 "+comentarios.size());
+
+                        Log.w(".:","TAMAÑO "+usuarios.size());
+                        for(ComentarioEnt e: comentarios)
+                        {
+                            Log.w("ALLI","Econtre "+e.getIdUsuarioC());
+                            for(Usuario u: usuarios)
+                            {
+                                if(e.getIdUsuarioC().compareTo(u.getID())==0)
+                                {
+                                    Toast.makeText(getBaseContext(),"Baje USuario",Toast.LENGTH_SHORT).show();
+                                    String com = u.getNombre()+", dijo: "+e.getComentario();
+                                    adaptador.add(com);
+                                }
+                            }
+                        }
+                        lisv.setAdapter(adaptador);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                    }
+                });
+
+
             }
-        }
-        lisv.setAdapter(adaptador);
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+            }
+        });
+
 
         comentar.setOnClickListener(new View.OnClickListener() {
             @Override
