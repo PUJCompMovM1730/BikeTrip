@@ -121,7 +121,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     boolean usuario = true;
 
     private Button mRutas;
-    private Button btnCompartir;
     private LatLng startLatLng;
     private LatLng endLatLng;
     private FirebaseDatabase database;
@@ -144,24 +143,12 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         puntoActual =null;
         puntoFinal = null;
         reiniciar=true;
-        btnCompartir = (Button)findViewById(R.id.btnCompartir);
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
         mRutas = (Button) findViewById(R.id.btnMasrutas);
         txtDireccion = (EditText)findViewById(R.id.texto);
-        btnCompartir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(),Compartir.class);
-              /*
-                i.putExtra("LatI", lat);
-                i.putExtra("LonI", lon);
-                i.putExtra("LatF", latF);
-                i.putExtra("LonF", lonF);*/
-                startActivity(i);
-            }
-        });
+
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -269,7 +256,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         r1.setFin("Ubicación seleccionada");
                     }
 
-                    myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                    myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                     String	key	= myRef.child("rutas").push().getKey();
                     //myRef.push().getKey();
                     myRef=database.getReference(PATH_RUTAS+key);
@@ -1027,7 +1014,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     }
 
     public void loadPuntosEmpresas() {
-        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
         myRef = database.getReference(PATH_PUNTOS_EMPRESAS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1038,7 +1025,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Log.i("PuntoEmpresa: ", "Encontró empresa:	"+puntoEmpresa.toString());
                     Date fechaActual = Calendar.getInstance().getTime();
 
-                  //  if(puntoEmpresa.getHora_cierre().after(fechaActual)){
+                    if(puntoEmpresa.getHora_cierre().after(fechaActual)){
                         final LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
                                 puntoEmpresa.getLongitud());
                         final String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
@@ -1055,9 +1042,18 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes,
                                         0, bytes.length);
                                 Bitmap resize = getResizedBitmap(bmp,30,30);
-                                mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
-                                        .icon(BitmapDescriptorFactory.fromBitmap(resize))
-                                        .title(informacion));
+
+
+                                Marker m = mMap.addMarker(new MarkerOptions().position(coordenadaPunto).
+                                        icon(BitmapDescriptorFactory
+                                                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).title(informacion));
+                                /*Marker m = mMap.addMarker(new MarkerOptions().position(coordenadaPunto).
+                                        icon(BitmapDescriptorFactory.fromBitmap(resize)).title(informacion));*/
+                                m.setVisible(true);
+
+                                //mMap.addMarker(new MarkerOptions().position(coordenadaPunto)
+                                  //      .icon(BitmapDescriptorFactory.fromBitmap(resize))
+                                    //    .title(informacion));
 
 
                             }
@@ -1070,7 +1066,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         });
 
                     }
-//                }
+                }
             }
 
 

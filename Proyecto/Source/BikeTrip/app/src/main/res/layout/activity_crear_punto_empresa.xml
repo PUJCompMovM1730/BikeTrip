@@ -17,17 +17,35 @@
         tools:context="com.example.carlos.biketrip.CrearPuntoEmpresa"/>
 
 
-    <Button
-        android:id="@+id/btnConfirmarPunto"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/CrearPunto"
-        android:layout_gravity="right"/>
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/ivImagenPunto"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCamaraPunto"
+        android:text="@string/CamaraPunto"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0.5"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnGaleriaPunto"
+        android:text="@string/GaleriaPunto"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0.5"/>
+        <Button
+            android:id="@+id/btnConfirmarPunto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/CrearPunto"
+            android:layout_gravity="right"/>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_barCrearPunto"
@@ -65,30 +83,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvDuracionMarcador"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/ivImagenPunto"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
 
-        <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnCamaraPunto"
-            android:text="@string/CamaraPunto"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="0.5"/>
 
-        <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnGaleriaPunto"
-            android:text="@string/GaleriaPunto"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="0.5"/>
-
-    </LinearLayout>
 
 
 

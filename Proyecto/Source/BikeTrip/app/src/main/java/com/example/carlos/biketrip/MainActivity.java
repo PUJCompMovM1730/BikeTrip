@@ -1,6 +1,9 @@
 package com.example.carlos.biketrip;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,6 +53,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import entidades.DownloadImage;
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /*try {
+        try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.example.carlos.biketrip",
                     PackageManager.GET_SIGNATURES);
@@ -208,7 +214,7 @@ public class MainActivity extends AppCompatActivity
 
         } catch (NoSuchAlgorithmException e) {
 
-        }*/
+        }
 
     }
 

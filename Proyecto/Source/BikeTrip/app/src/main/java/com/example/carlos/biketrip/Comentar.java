@@ -80,7 +80,7 @@ public class Comentar extends AppCompatActivity {
                 c.setComentario(comentario);
                 c.setfCalificacion(d);
                 c.setIdPunto(idP);
-                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 String key = myRef.push().getKey();
                 c.setIdComentario(key);
                 myRef = database.getReference(PATH_COMENTARIOS+ key);
@@ -88,7 +88,7 @@ public class Comentar extends AppCompatActivity {
                 PuntoEnt p = (PuntoEnt) getIntent().getSerializableExtra("Punto");
                 p.setPuntaje(puntaF);
                 p.setCanUsuarios(p.getCanUsuarios()+1);
-                myRef1= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef1= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 myRef1 = database1.getReference(PATH_PUNTOS+ p.getIdPunto());
                 myRef1.setValue(p);
 

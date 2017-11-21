@@ -60,14 +60,6 @@
             android:scaleType="fitCenter"
             android:src="@drawable/regis"/>
 
-        <Button
-            android:id="@+id/btnCompartir"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_gravity="right"
-            android:scaleType="fitCenter"
-            android:text="C" />
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

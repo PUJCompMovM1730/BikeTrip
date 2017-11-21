@@ -104,7 +104,7 @@ public class Evento extends AppCompatActivity {
                 e.setTiempo(d);
                 e.setComentarios(editComentarios.getText().toString());
                 e.setNombre(editNombre.getText().toString());
-                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 String key = myRef.push().getKey();
                 e.setIdEvento(key);
                 myRef = database.getReference(PATH_EVENTOS+ key);

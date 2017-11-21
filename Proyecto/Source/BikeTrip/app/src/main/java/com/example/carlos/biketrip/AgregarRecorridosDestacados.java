@@ -209,7 +209,7 @@ public class AgregarRecorridosDestacados extends FragmentActivity {
                         r.setTiempo(myDate);
                         r.setDistancia(distance(r.getLatInicio(), r.getLonInicio(), r.getLatFinal(), r.getLonFinal()));
                         if (r.getDistancia() != 0) {
-                            myRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                            myRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                             String key = myRef.push().getKey();
                             myRef = database.getReference(PATH_RUTASP + key);
                             myRef.setValue(r);

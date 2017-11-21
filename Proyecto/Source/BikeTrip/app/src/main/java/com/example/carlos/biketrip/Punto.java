@@ -97,7 +97,7 @@ public class Punto extends AppCompatActivity {
                 pe.setComentario(editComentarios.getText().toString());
                 pe.setNombre(editNombre.getText().toString());
                 pe.setTelefono(Integer.parseInt(editTelefono.getText().toString()));
-                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 String key = myRef.push().getKey();
                 pe.setIdPunto(key);
                 myRef = database.getReference(PATH_PUNTOS+ key);

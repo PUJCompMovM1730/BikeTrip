@@ -152,7 +152,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
         });
     }
     public	void	leerDatos() {
-        myRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
         myRef.child("rutas");
         myRef = database.getReference(PATH_RUTAS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -174,7 +174,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
 
                 AdapterItem adapter = new AdapterItem(getBaseContext(), R.layout.item_layout, rutasH);
                 listHistorial.setAdapter(adapter);
-                myRef1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 myRef1.child("rutasP");
                 myRef1 = database1.getReference(PATH_RUTASP);
                 myRef1.addListenerForSingleValueEvent(new ValueEventListener() {

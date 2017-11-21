@@ -68,6 +68,10 @@ public class MenuPrincipal extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
         intActividad = 0;
+        mAuth =	FirebaseAuth.getInstance();
+        user	=	mAuth.getCurrentUser();
+        database=	FirebaseDatabase.getInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -78,7 +82,6 @@ public class MenuPrincipal extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         Intent i = getIntent();
         int ed = i.getIntExtra("intActividad",0);
@@ -120,9 +123,7 @@ public class MenuPrincipal extends AppCompatActivity
                     fragment = new Notificaciones();
                 }
                 break;
-
             }
-
             FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment);
             transaction.commit();
@@ -130,16 +131,13 @@ public class MenuPrincipal extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
 
         }else{
-            FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, new MapaRuta());
-            transaction.commit();
-            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+                FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, new MostrarRecorridosDestacados());
+                transaction.commit();
+                drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
         }
-        mAuth =	FirebaseAuth.getInstance();
-        user	=	mAuth.getCurrentUser();
-        database=	FirebaseDatabase.getInstance();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+
 
         View headerview = navigationView.getHeaderView(0);
 
@@ -166,7 +164,6 @@ public class MenuPrincipal extends AppCompatActivity
     }
 
     public	void	loadUsers()	{
-
         myRef =	database.getReference(PATH_USERS);
         myRef.addValueEventListener(new	ValueEventListener()	{
             @Override
@@ -206,6 +203,18 @@ public class MenuPrincipal extends AppCompatActivity
 
                     nav_item3.setEnabled(false);
                     nav_item3.setVisible(false);
+                }else{
+                    Menu menuNav=navigationView.getMenu();
+                    MenuItem navInici = menuNav.findItem(R.id.nav_IniciarRuta);
+                    MenuItem navHisto = menuNav.findItem(R.id.nav_Historial);
+                    MenuItem navAmigos = menuNav.findItem(R.id.nav_Amigos);
+                    navInici.setEnabled(false);
+                    navInici.setVisible(false);
+                    navHisto.setEnabled(false);
+                    navHisto.setVisible(false);
+                    navAmigos.setEnabled(false);
+                    navAmigos.setVisible(false);
+
                 }
 
             }

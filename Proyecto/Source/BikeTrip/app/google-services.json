@@ -1,73 +1,21 @@
 {
   "project_info": {
-    "project_number": "274673925293",
-    "firebase_url": "https://ejerciciostorage.firebaseio.com",
-    "project_id": "ejerciciostorage",
-    "storage_bucket": "ejerciciostorage.appspot.com"
+    "project_number": "349863438410",
+    "firebase_url": "https://biketrip2-5bad6.firebaseio.com",
+    "project_id": "biketrip2-5bad6",
+    "storage_bucket": "biketrip2-5bad6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:274673925293:android:8cd102bb6b4d5fcf",
-        "android_client_info": {
-          "package_name": "com.example.sala_bd.ejerciciostorage"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "274673925293-n76cck6qskt6koionjrouqqhde6j5vb3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.sala_bd.ejerciciostorage",
-            "certificate_hash": "4f7471613ab726a3365d34fc86fbce08de06f7a2"
-          }
-        },
-        {
-          "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "274673925293-0v8qtll9klk4g5r6go2cas043u6tt1hj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.sala_bd.ejerciciostorage",
-            "certificate_hash": "9d7b96d38c0187415691659d33b38c7ee8144f4a"
-          }
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDerpY6MJ8NOBCWmrlWhb2hh4hFZeFJz4E"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:274673925293:android:f81acc3b03469bfd",
+        "mobilesdk_app_id": "1:349863438410:android:f81acc3b03469bfd",
         "android_client_info": {
           "package_name": "com.example.carlos.biketrip"
         }
       },
       "oauth_client": [
         {
-          "client_id": "274673925293-75gdp0al73r2mmt9aipt7326momfokba.apps.googleusercontent.com",
+          "client_id": "349863438410-5ge02k11ho8uo2plrv60s8phqd96ak7e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.carlos.biketrip",
@@ -75,29 +23,13 @@
           }
         },
         {
-          "client_id": "274673925293-ufss5kjskv9fv220f5vnsi1ejkghoceh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.carlos.biketrip",
-            "certificate_hash": "0068c028843fe0fa2786770bc80af4f66edcfcba"
-          }
-        },
-        {
-          "client_id": "274673925293-c7v8jh7qskqi2db322e0vsgf3fn4dbu8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.carlos.biketrip",
-            "certificate_hash": "f9ee9b4a4f2265b6266295e682f1b77374bf1fcf"
-          }
-        },
-        {
-          "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
+          "client_id": "349863438410-t3li81rpvvrc6svs1fniqjli7g1rcsd6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDerpY6MJ8NOBCWmrlWhb2hh4hFZeFJz4E"
+          "current_key": "AIzaSyAACFzLBlZiTmFP0hWdSqwrFv0nukuRpJA"
         }
       ],
       "services": {
@@ -108,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "274673925293-3ivhgllnm7pord4g88kq1mvp40f2grj5.apps.googleusercontent.com",
+              "client_id": "349863438410-t3li81rpvvrc6svs1fniqjli7g1rcsd6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

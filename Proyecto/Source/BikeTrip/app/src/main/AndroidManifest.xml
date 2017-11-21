@@ -91,7 +91,6 @@
         <activity android:name=".MostrarRecorridosDestacados"></activity>
         <activity android:name=".ComentarPuntos" />
         <activity android:name=".Comentar" />
-        <activity android:name=".Compartir"></activity>
     </application>
 
 </manifest>

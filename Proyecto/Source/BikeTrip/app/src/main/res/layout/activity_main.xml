@@ -26,13 +26,12 @@
             android:id="@+id/iWLogo"
             android:layout_width="240dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:padding="16dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/bike"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:padding="16dp"
+            android:src="@drawable/bike" />
 
 
         <Button
@@ -67,8 +66,9 @@
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_above="@id/btnIniciarSesion"/>
+            android:layout_below="@+id/iWLogo"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal" />
 
         <EditText
             android:id="@+id/etPass"

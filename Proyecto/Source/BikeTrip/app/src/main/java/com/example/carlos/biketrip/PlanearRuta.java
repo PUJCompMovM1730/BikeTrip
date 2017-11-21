@@ -1,11 +1,16 @@
 package com.example.carlos.biketrip;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import entidades.FacebookShare;
 import entidades.RutaEnt;
 
 public class PlanearRuta extends AppCompatActivity implements View.OnClickListener {
@@ -58,7 +65,7 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
     public	final	static	double	RADIUS_OF_EARTH_KM	 =	6371;
 
     public Spinner spinner;
-
+    CallbackManager callbackManager;
 
 
     private final static int RESULTADOH = 0;
@@ -68,6 +75,8 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planear_ruta);
+        callbackManager = CallbackManager.Factory.create();
+
         //Inicialización en	onCreate()
         database=	FirebaseDatabase.getInstance();
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
@@ -235,12 +244,15 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
                     r.setTiempo(myDate);
                     r.setDistancia(distance(r.getLatInicio(),r.getLonInicio(),r.getLatFinal(),r.getLonFinal()));
                     if(r.getDistancia()!=0) {
-                        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                         String key = myRef.push().getKey();
                         myRef = database.getReference(PATH_RUTASP + key);
                         myRef.setValue(r);
                         Toast.makeText(PlanearRuta.this, "La ruta ya se guardó", Toast.LENGTH_SHORT).show();
-                        startActivityForResult(new Intent(getBaseContext(), HistoriaYPlanea.class),RESULTADOH);
+
+                        share();
+
+
                     }else{
                         Toast.makeText(PlanearRuta.this, "Ingrese direcciones válidas", Toast.LENGTH_SHORT).show();
                     }
@@ -255,6 +267,42 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
             }
         });
     }
+
+    public void share() {
+
+        final Activity activity = this;
+        final Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.bike2);
+
+        final CharSequence[] items = {"Compartir", "Cancelar"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                PlanearRuta.this);
+        builder.setTitle("Opciones para compartir");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Compartir")) {
+
+                    FacebookShare facebookShare = new FacebookShare(activity, getBaseContext()
+                            , callbackManager, "Punto añadido satisfactoriamente");
+
+                    facebookShare.sharePhoto(image);
+
+                } else if (items[item].equals("Cancelar")) {
+                    dialog.dismiss();
+                    Toast.makeText(getBaseContext(),
+                            "Punto añadido satisfactoriamente", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(getBaseContext(), MenuPrincipal.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
+            }
+        });
+        builder.show();
+    }
+
+
     public	double	distance(double	 lat1,	double	long1,	double	lat2,	double	long2)	{
         double	latDistance =	Math.toRadians(lat1	 - lat2);
         double	lngDistance =	Math.toRadians(long1	 - long2);
@@ -272,6 +320,8 @@ public class PlanearRuta extends AppCompatActivity implements View.OnClickListen
         }
     }
     protected	void	onActivityResult(int requestCode,	 int resultCode,	 Intent data)	 {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
         switch	(requestCode)	 {
 
             case RESULTADOH: {

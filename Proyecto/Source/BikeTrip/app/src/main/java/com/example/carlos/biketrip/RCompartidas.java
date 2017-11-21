@@ -65,7 +65,7 @@ public class RCompartidas extends AppCompatActivity {
                 RutaEnt sel = new RutaEnt();
                 sel = rutas.get(pos);
                 sel.setIdUsuario(mAuth.getCurrentUser().getUid());
-                myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
 
                 String	key	= myRef.child("rutasP").push().getKey();
                 //myRef.push().getKey();
@@ -79,7 +79,7 @@ public class RCompartidas extends AppCompatActivity {
     }
 
     private void leerDatos2() {
-        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
         myRef.child("rutasP");
         myRef = database.getReference(PATH_RUTAS);
 
@@ -116,7 +116,8 @@ public class RCompartidas extends AppCompatActivity {
     }
 
     public	void	leerDatos() {
-        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/" +
+                "");
         myRef.child("rutas");
         myRef = database.getReference(PATH_RUTAS);
         final String uId = mAuth.getCurrentUser().getUid();

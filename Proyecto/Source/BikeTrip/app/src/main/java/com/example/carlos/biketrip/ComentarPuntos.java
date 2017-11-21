@@ -74,7 +74,7 @@ public class ComentarPuntos extends AppCompatActivity {
         adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         punto = (PuntoEnt) getIntent().getSerializableExtra("Punto");
         Log.w("HOLA",punto.getIdPunto());
-        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
         myRef = database.getReference(PATH_COMENTARIOS);
         nombreP.setText(punto.getNombre());
         descripcionP.setText(punto.getComentario());
@@ -111,7 +111,7 @@ public class ComentarPuntos extends AppCompatActivity {
                 }else{
                     rb.setRating(punto.getPuntaje());
                 }
-                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://biketrip2-5bad6.firebaseio.com/");
                 myRef = database.getReference(PATH_USUARIOS);
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
