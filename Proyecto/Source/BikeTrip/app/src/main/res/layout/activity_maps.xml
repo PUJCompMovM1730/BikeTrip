@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:text="+Rutas"
             android:id="@+id/btnMasrutas"
+
             android:layout_weight="0.7"/>
     </LinearLayout>
     <fragment
@@ -47,16 +48,17 @@
             android:layout_height="60dp"
             android:layout_gravity="right"
             android:scaleType="fitCenter"
-            android:id="@+id/parar"/>
+            android:id="@+id/parar"
+            android:src="@drawable/parar"/>
             <!--android:src="@drawable/parar"-->
-
 
         <ImageButton
             android:id="@+id/registrar"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="right"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/regis"/>
             <!--android:src="@drawable/regis"-->
 
     </LinearLayout>
