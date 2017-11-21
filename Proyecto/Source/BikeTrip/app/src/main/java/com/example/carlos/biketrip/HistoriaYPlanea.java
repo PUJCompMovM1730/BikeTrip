@@ -38,6 +38,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
+    private String uId;
 
     public	static	final	String	PATH_RUTAS="rutas/";
 
@@ -52,7 +53,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_historia_yplanea);
-
         txHistorial = (TextView) findViewById(R.id.txtPlaneadas);
         txPlaneadas = (TextView) findViewById(R.id.txtHistorial);
         listHistorial = (ListView) findViewById(R.id.listHis);
@@ -63,6 +63,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
         database=	FirebaseDatabase.getInstance();
         database1 = FirebaseDatabase.getInstance();
         mAuth =	FirebaseAuth.getInstance();
+        uId = mAuth.getCurrentUser().getUid();
         leerDatos();
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,16 +98,13 @@ public class HistoriaYPlanea extends AppCompatActivity {
                 i.putExtra("LatF", latF);
                 i.putExtra("LonF", lonF);
                 i.putExtra("Ruta", sel);
-
                 // Establecemos el resultado, y volvemos a la actividad
                 // principal. La variable que introducimos en primer lugar
                 // "RESULT_OK" es de la propia actividad, no tenemos que
                 // declararla nosotros.
                 setResult(RESULT_OK, i);
-
                 // Finalizamos la Activity para volver a la anterior
                 finish();
-
             }
         });
         listPlaneadas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,6 +113,8 @@ public class HistoriaYPlanea extends AppCompatActivity {
                 final int pos = position;
                 RutaEnt sel = new RutaEnt();
                 sel = rutasP.get(pos);
+
+
                 double latI = sel.getLatInicio();
                 double lonI = sel.getLonInicio();
                 double latF = sel.getLatFinal();
@@ -124,7 +124,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
                 int de;
                 de = i.getIntExtra("Actividad",0);
                 // Le metemos el resultado que queremos mandar a la
-
                 // actividad principal.
                 if(de ==0)
                 {
@@ -139,7 +138,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
                     // "RESULT_OK" es de la propia actividad, no tenemos que
                     // declararla nosotros.
                     setResult(RESULT_OK, i);
-
                     // Finalizamos la Activity para volver a la anterior
                     finish();
 
@@ -160,7 +158,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
         myRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef.child("rutas");
         myRef = database.getReference(PATH_RUTAS);
-        final String uId = mAuth.getCurrentUser().getUid();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -191,8 +188,7 @@ public class HistoriaYPlanea extends AppCompatActivity {
                             RutaEnt rut = singleSnapshot.getValue(RutaEnt.class);
                             Log.i("Ruta", "Encontró rutaP:	" + rut.getNombre());
                             String idR = rut.getIdUsuario();
-
-                            if (idR.equals(uId)) {
+                            if (uId.equals(idR)) {
                                 rutasP.add(rut);
 
                             }

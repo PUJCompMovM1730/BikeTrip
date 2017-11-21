@@ -118,6 +118,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private FirebaseAuth mAuth;
     private boolean reiniciar;
     private final static int RESULTADOH = 0;
+    boolean usuario = true;
 
     private Button mRutas;
     private LatLng startLatLng;
@@ -315,56 +316,43 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
                 }
                 if(idi==2){//Selecciono agregar PUnto
-
-                    Intent i = new Intent(getBaseContext(), Punto.class);
-                    //Bundle b = new Bundle();
                     if(lat!=0){
-                        /*
-                    final boolean[] usuario = {true};
                         startLatLng = new LatLng(lat,lon);
-                        i.putExtra("Lat",lat);
-                        i.putExtra("Lon",lon);
-                        //   Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
+                        startLatLng = new LatLng(lat,lon);
+                        myRef = database.getReference(PATH_USERS);
                         reiniciar=true;
-                        startActivity(i);
-                    }else{
-                        Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
-
-                   /* final boolean[] usuario = {true};
-                    myRef1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-                    myRef1.child("users");
-                    final String uId = mAuth.getCurrentUser().getUid();
-                    myRef1 = database.getReference(PATH_USERS);
-                    myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            //Toast.makeText(v.getContext(),"Voy a buscar",Toast.LENGTH_LONG).show();
-                            for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                                Usuario u = singleSnapshot.getValue(Usuario.class);
-                                String id= u.getID();
-                                if (id.equals(uId)&& u.getTipo() == 0) {
-                                    usuario[0] =false;
+                        final String uId = mAuth.getCurrentUser().getUid();
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                    Usuario u =	singleSnapshot.getValue(Usuario.class);
+                                    String id= u.getID();
+                                    String  tipo = String.valueOf(u.getTipo());
+                                    tipo = tipo.trim();
+                                    if (id.equals(uId)) {
+                                        if(tipo.equals("0")){
+                                            usuario =false;
+                                            Intent im = new Intent(getBaseContext(), CrearPuntoEmpresa.class);
+                                            im.putExtra("Lat", lat);
+                                            im.putExtra("Lon", lon);
+                                            startActivity(im);
+                                        }
+                                    }
                                 }
+                                if(usuario){
+                                    Intent i = new Intent(getBaseContext(), Punto.class);
+                                    i.putExtra("Lat", lat);
+                                    i.putExtra("Lon", lon);
+                                    startActivity(i);
+                                }
+
                             }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w("Consulta", "error	en	la	consulta", databaseError.toException());
-                        };
-                    });
-                    reiniciar=true;
-                    if(usuario[0]){
-                       // Intent intent = new Intent(getBaseContext(), Punto.class);
-                      //  startActivity(intent);
-                    }else{
-                        Intent intent = new Intent(getBaseContext(), CrearPuntoEmpresa.class);
-                        startActivity(intent);*/
-                        startLatLng = new LatLng(lat,lon);
-                        i.putExtra("Lat",lat);
-                        i.putExtra("Lon",lon);
-                        //   Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
-                        reiniciar=true;
-                        startActivity(i);
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                            }
+                        });
                     }else{
                         Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
 
