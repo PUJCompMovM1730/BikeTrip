@@ -44,7 +44,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/agregar" />
         <ImageButton
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="60dp"
             android:layout_gravity="right"
             android:scaleType="fitCenter"
@@ -54,12 +54,18 @@
 
         <ImageButton
             android:id="@+id/registrar"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="60dp"
             android:layout_gravity="right"
             android:scaleType="fitCenter"
             android:src="@drawable/regis"/>
-            <!--android:src="@drawable/regis"-->
+
+        <Button
+            android:id="@+id/btnCompartir"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:scaleType="fitCenter"
+            android:text="C" />
 
     </LinearLayout>
     <LinearLayout

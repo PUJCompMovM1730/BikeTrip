@@ -89,7 +89,8 @@
         <activity android:name=".RecorridosDestacados" />
         <activity android:name=".CrearPuntoEmpresa" />
         <activity android:name=".ComentarPuntos" />
-        <activity android:name=".Comentar"></activity>
+        <activity android:name=".Comentar" />
+        <activity android:name=".Compartir"></activity>
     </application>
 
 </manifest>

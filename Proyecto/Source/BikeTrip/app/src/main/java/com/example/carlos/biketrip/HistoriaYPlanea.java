@@ -113,8 +113,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
                 final int pos = position;
                 RutaEnt sel = new RutaEnt();
                 sel = rutasP.get(pos);
-
-
                 double latI = sel.getLatInicio();
                 double lonI = sel.getLonInicio();
                 double latF = sel.getLatFinal();
@@ -131,7 +129,6 @@ public class HistoriaYPlanea extends AppCompatActivity {
                     i.putExtra("LonI", lonI);
                     i.putExtra("LatF", latF);
                     i.putExtra("LonF", lonF);
-
                     i.putExtra("Ruta", sel);
                     // Establecemos el resultado, y volvemos a la actividad
                     // principal. La variable que introducimos en primer lugar

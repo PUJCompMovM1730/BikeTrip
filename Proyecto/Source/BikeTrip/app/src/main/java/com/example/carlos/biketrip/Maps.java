@@ -121,6 +121,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     boolean usuario = true;
 
     private Button mRutas;
+    private Button btnCompartir;
     private LatLng startLatLng;
     private LatLng endLatLng;
     private FirebaseDatabase database;
@@ -143,11 +144,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         puntoActual =null;
         puntoFinal = null;
         reiniciar=true;
+        btnCompartir = (Button)findViewById(R.id.btnCompartir);
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
         mRutas = (Button) findViewById(R.id.btnMasrutas);
         txtDireccion = (EditText)findViewById(R.id.texto);
+        btnCompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getBaseContext(),Compartir.class);
+                startActivity(i);
+            }
+        });
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
