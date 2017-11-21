@@ -270,7 +270,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
 
                     myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-
                     String	key	= myRef.child("rutas").push().getKey();
                     //myRef.push().getKey();
                     myRef=database.getReference(PATH_RUTAS+key);
@@ -1028,6 +1027,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     }
 
     public void loadPuntosEmpresas() {
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef = database.getReference(PATH_PUNTOS_EMPRESAS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1038,7 +1038,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Log.i("PuntoEmpresa: ", "Encontró empresa:	"+puntoEmpresa.toString());
                     Date fechaActual = Calendar.getInstance().getTime();
 
-                    if(puntoEmpresa.getHora_cierre().after(fechaActual)){
+                  //  if(puntoEmpresa.getHora_cierre().after(fechaActual)){
                         final LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
                                 puntoEmpresa.getLongitud());
                         final String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
@@ -1047,9 +1047,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         mStorageRef = FirebaseStorage.getInstance().
                                 getReference(PATH_IMAGENES +puntoEmpresa.getIdEmpresa()
                                         +"/"+puntoEmpresa.getFoto());
-
-
-
                         mStorageRef.getBytes(Long.MAX_VALUE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
@@ -1073,7 +1070,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         });
 
                     }
-                }
+//                }
             }
 
 
