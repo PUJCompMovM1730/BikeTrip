@@ -97,6 +97,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     Polyline line;
     Context context;
+    private DatabaseReference myRef1;
     public	final	static	double	RADIUS_OF_EARTH_KM	 =	6371;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -123,6 +124,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private LatLng endLatLng;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    public	static	final	String	PATH_USERS="users/";
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_EVENTOS="eventos/";
     public	static	final	String	PATH_PUNTOS="puntos/";
@@ -311,13 +313,38 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }else{
                         Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
                     }
-
                 }
                 if(idi==2){//Selecciono agregar PUnto
-
-                    Intent intent = new Intent(getBaseContext(), Punto.class);
+                    final boolean[] usuario = {true};
+                    myRef1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
+                    myRef1.child("users");
+                    final String uId = mAuth.getCurrentUser().getUid();
+                    myRef1 = database.getReference(PATH_USERS);
+                    myRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //Toast.makeText(v.getContext(),"Voy a buscar",Toast.LENGTH_LONG).show();
+                            for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                Usuario u = singleSnapshot.getValue(Usuario.class);
+                                String id= u.getID();
+                                if (id.equals(uId)&& u.getTipo() == 0) {
+                                    usuario[0] =false;
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("Consulta", "error	en	la	consulta", databaseError.toException());
+                        };
+                    });
                     reiniciar=true;
-                    startActivity(intent);
+                    if(usuario[0]){
+                       // Intent intent = new Intent(getBaseContext(), Punto.class);
+                      //  startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(getBaseContext(), CrearPuntoEmpresa.class);
+                        startActivity(intent);
+                    }
                 }
             }
 
