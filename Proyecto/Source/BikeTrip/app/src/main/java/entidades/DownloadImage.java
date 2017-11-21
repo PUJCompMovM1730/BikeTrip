@@ -112,7 +112,7 @@ public class DownloadImage extends AsyncTask<String,Void,Bitmap>{
             usuario.setID(id);
             myRef=database.getReference(PATH_USERS+id);
             myRef.setValue(usuario);
-
+            Log.i("Nuevo User Face", usuario.toString());
 
 
         }

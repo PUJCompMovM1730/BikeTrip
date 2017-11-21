@@ -107,7 +107,6 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
         }
 
        item= data.get(position);
-        Log.i("CustomAdapter+loadRutas",item.toString());
         infoUS.IUnom.setText(item.getNombre()+" "+item.getApellido());
         loadRutas(item, infoUS);
 
@@ -121,6 +120,8 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
                     .into(infoUS.IUfoto);
         }
 
+        final int k = position;
+        Log.i("CustomAdapter"," pos"+k);
         final String IDUPerfil = item.getID();
         final String nombre = infoUS.IUnom.getText().toString();
         infoUS.IUfoto.setOnClickListener(new View.OnClickListener() {
@@ -133,14 +134,17 @@ public class CustomAdapter  extends ArrayAdapter<Usuario> {
             }
         });
 
+
         infoUS.IURuta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RutaEnt miRutabebe= cargarRuta(item);
-                if(miRutabebe.getDescripcion()!=null) {
+                RutaEnt miRuta= cargarRuta(item);
+                if(miRuta.getDescripcion()!=null) {
                     Intent i = new Intent(getContext(),Maps.class);
-                    i.putExtra("Ruta",miRutabebe);
+
                     i.putExtra("Actividad",1);
+                    i.putExtra("LatF", miRuta.getLatFinal());
+                    i.putExtra("LonF",miRuta.getLonFinal());
                     getContext().startActivity(i);
                 }
             }

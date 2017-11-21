@@ -17,6 +17,8 @@ public class RecorridosDestacados extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.activity_recorridos_destacados, container, true);
 
+
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

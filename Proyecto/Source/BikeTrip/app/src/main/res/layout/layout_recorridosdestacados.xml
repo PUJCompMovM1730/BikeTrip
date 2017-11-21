@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/idLayoutRecorridosDestacados"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tvNombreRuta"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Nombre ruta: " />
+
+    <TextView
+        android:id="@+id/tvDistancia"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Distancia: " />
+
+    <TextView
+        android:id="@+id/tvInicio"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Inicio: " />
+
+    <TextView
+        android:id="@+id/tvFin"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Fin: " />
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/ibtnMapaRD"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@drawable/mapabackg"
+        android:paddingBottom="15dp"/>
+
+</LinearLayout>

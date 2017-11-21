@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="30dp">
-    <LinearLayout
 
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -16,7 +16,7 @@
             android:text="Nombre: " />
 
         <EditText
-            android:id="@+id/txtNombre"
+            android:id="@+id/txtNombreReco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -34,7 +34,7 @@
             />
 
         <EditText
-            android:id="@+id/txtDescripción"
+            android:id="@+id/txtDescripciónReco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
@@ -44,21 +44,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Digite direccion de inicio"
-        android:id="@+id/txtInicio"
+        android:id="@+id/txtInicioReco"
 
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Digite direccion final"
-        android:id="@+id/txtFinal"
-        />
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Digite direccion final"
-        android:id="@+id/spPublica"
-
+        android:id="@+id/txtFinalReco"
         />
 
     <TextView
@@ -68,7 +61,7 @@
 
 
     <EditText
-        android:id="@+id/fechaRP"
+        android:id="@+id/fechaRPReco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -76,27 +69,19 @@
         android:inputType="date"
         android:singleLine="true" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="time"
-            android:id="@+id/horaRP"
-            android:hint="Digite hora"/>
-
-    <Button
-        android:id="@+id/btnGuardar"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar"
-        android:textSize="12sp"
-        />
+        android:ems="10"
+        android:inputType="time"
+        android:id="@+id/horaRPReco"
+        android:hint="Digite hora"/>
 
     <Button
-        android:id="@+id/btnRutasPu"
+        android:id="@+id/btnCrearReco"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Buscar Rutas Publicas.."
+        android:text="Crear"
         android:textSize="12sp"
         />
 

@@ -154,21 +154,27 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                 startActivityForResult(new Intent(getBaseContext(), HistoriaYPlanea.class),RESULTADOH);
             }
         });
+
+        final int actividadAnterior = getIntent().getIntExtra("Actividad",0);
         if(getIntent().getIntExtra("Actividad",0)==1) {
             Intent data = getIntent();
             final double latF = data.getExtras().getDouble("LatF");
             final double lonF = data.getExtras().getDouble("LonF");
+
             obtenerLocSubs();
+
+
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     Location location = locationResult.getLastLocation();
-                    Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
+                    Log.i("LOCATION", "Location	update	in	the	callback1:	" + location);
                     if (location != null) {
                         // mMap.clear();
                         lat = location.getLatitude();
                         lon = location.getLongitude();
                         startLatLng = new LatLng(lat, lon);
+
                         endLatLng = new LatLng(latF, lonF);
 
 
@@ -208,6 +214,8 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
                 }
             };
+
+
         }
         ibtnFin = (ImageButton)findViewById(R.id.parar);
         ibtnRegis = (ImageButton)findViewById(R.id.registrar);
@@ -385,12 +393,16 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         } else {
             //obtenerLocalizacion();
             obtenerLocSubs();
+            final Intent data = getIntent();
             mLocationCallback =	new	LocationCallback()	 {
                 @Override
                 public	void	onLocationResult(LocationResult locationResult) {
                     Location location = locationResult.getLastLocation();
-                    Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
+                    Log.i("LOCATION", "Location	update	in	the	callback2:	" + location);
                     if (location != null) {
+
+
+
                         // mMap.clear();
                         lat = location.getLatitude();
                         lon = location.getLongitude();
@@ -406,6 +418,56 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         if(cantidadActualizaciones==0){
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(ge));
                             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        }
+
+
+                        if(cantidadActualizaciones==0 && actividadAnterior==1){
+
+                            lat = location.getLatitude();
+                            lon = location.getLongitude();
+                            startLatLng = new LatLng(lat, lon);
+                            final double latF = data.getExtras().getDouble("LatF");
+                            final double lonF = data.getExtras().getDouble("LonF");
+                            endLatLng = new LatLng(latF, lonF);
+
+                            if(puntoFinal!=null) puntoFinal.remove();
+
+                            puntoFinal = mMap.addMarker(new MarkerOptions().position(endLatLng).
+                                    icon(BitmapDescriptorFactory
+                                            .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            puntoFinal.setVisible(true);
+
+                        /*mMap.addMarker(new MarkerOptions().position(endLatLng).
+                                icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));*/
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(endLatLng));
+                            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                            double d = distance(lat, lon, latF, lonF);
+                            txtduracion.setText(String.valueOf(d));
+                            double tiemp = d / 30 * 60;
+                            loadTodo();
+
+                            if(puntoActual!=null) puntoActual.remove();
+                            puntoActual = mMap.addMarker(new MarkerOptions().position(startLatLng).
+                                    icon(BitmapDescriptorFactory.
+                                            fromResource(R.drawable.bike2)));
+                            puntoActual.setVisible(true);
+
+
+
+                        /*mMap.addMarker(new MarkerOptions().position(startLatLng).
+                                icon(BitmapDescriptorFactory.
+                                fromResource(R.drawable.bike2)));*/
+                            txttiempo.setText(String.valueOf(tiemp));
+
+                            String urlTopass = makeURL(lat, lon, latF,
+                                    lonF);
+                            new connectAsyncTask(urlTopass).execute();
+
+
+
+
+
                         }
 
                         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -529,7 +591,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         public	void	onLocationResult(LocationResult locationResult)	 {
                             Location	location	=	locationResult.getLastLocation();
 
-                            Log.i("LOCATION",	"Location	update	in	the	callback:	"	+	location);
+                            Log.i("LOCATION",	"Location	update	in	the	callback3:	"	+	location);
                             if	(location	 !=	null) {
                                 lat = location.getLatitude();
                                 lon = location.getLongitude();
@@ -605,7 +667,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         @Override
                         public	void	onLocationResult(LocationResult locationResult) {
                             Location location = locationResult.getLastLocation();
-                            Log.i("LOCATION", "Location	update	in	the	callback:	" + location);
+                            Log.i("LOCATION", "Location	update	in	the	callback4:	" + location);
                             if (location != null) {
                                 // mMap.clear();
                                 lat = location.getLatitude();
