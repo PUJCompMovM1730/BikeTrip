@@ -101,12 +101,12 @@ public class MenuPrincipal extends AppCompatActivity
                 break;
                 case 4:
                 {
-                    fragment = new RecorridosDestacados();
+                    fragment = new MostrarRecorridosDestacados();
                 }
                 break;
                 case 5:
                 {
-                    fragment = new CrearRecorridosDestacados();
+                    //fragment = new CrearRecorridosDestacados();
                 }
                 break;
                 case 6:
@@ -304,14 +304,16 @@ public class MenuPrincipal extends AppCompatActivity
             fragementoSeleccionado = true;
 
         } else if (id == R.id.nav_RecorridosDestacados) {
-            fragment = new RecorridosDestacados();
+            fragment = new MostrarRecorridosDestacados();
             intActividad=4;
             fragementoSeleccionado = true;
 
         }else if (id == R.id.nav_CrearRecorridosDestacados) {
-            fragment = new CrearRecorridosDestacados();
+            //fragment = new CrearRecorridosDestacados();
             intActividad=5;
-            fragementoSeleccionado = true;
+            //fragementoSeleccionado = true;
+            Intent intent = new Intent(getBaseContext(),AgregarRecorridosDestacados.class);
+            startActivity(intent);
 
         }else if (id == R.id.nav_CrearPunto) {
             //fragment = new CrearPuntoEmpresa();
