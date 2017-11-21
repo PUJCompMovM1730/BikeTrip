@@ -154,6 +154,11 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getBaseContext(),Compartir.class);
+              /*
+                i.putExtra("LatI", lat);
+                i.putExtra("LonI", lon);
+                i.putExtra("LatF", latF);
+                i.putExtra("LonF", lonF);*/
                 startActivity(i);
             }
         });
@@ -555,7 +560,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                             PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
-                            Log.i("Evento: ", "Encontró evento:	");
                             Double eveLat = myPunto.getLat();
                             Double eveLon = myPunto.getLon();
                             if(eveLat==marker.getPosition().latitude&& eveLon==marker.getPosition().longitude)
@@ -938,10 +942,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    PuntoEnt myEvento =	singleSnapshot.getValue(PuntoEnt.class);
-                    Log.i("Evento: ", "Encontró evento:	");
-                    Double eveLat = myEvento.getLat();
-                    Double eveLon = myEvento.getLon();
+                    PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
+                    Double eveLat = myPunto.getLat();
+                    Double eveLon = myPunto.getLon();
                     Double dis = distance(lat,lon, eveLat,eveLon);
                     LatLng eveL = new LatLng(eveLat,eveLon);
                     if(dis<=10)

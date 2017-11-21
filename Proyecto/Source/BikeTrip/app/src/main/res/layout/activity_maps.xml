@@ -64,6 +64,7 @@
             android:id="@+id/btnCompartir"
             android:layout_width="50dp"
             android:layout_height="60dp"
+            android:layout_gravity="right"
             android:scaleType="fitCenter"
             android:text="C" />
 

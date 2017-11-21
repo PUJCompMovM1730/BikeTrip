@@ -78,8 +78,6 @@ public class ComentarPuntos extends AppCompatActivity {
 
         Log.w("HOLA",punto.getIdPunto());
         myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-
-        myRef1= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef = database.getReference(PATH_COMENTARIOS);
         nombreP.setText(punto.getNombre());
         descripcionP.setText(punto.getComentario());
@@ -122,6 +120,7 @@ public class ComentarPuntos extends AppCompatActivity {
         }else{
             rb.setRating(punto.getPuntaje());
         }
+        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef = database.getReference(PATH_USUARIOS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
