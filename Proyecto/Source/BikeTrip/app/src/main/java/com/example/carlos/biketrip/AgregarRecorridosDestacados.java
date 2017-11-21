@@ -239,11 +239,7 @@ public class AgregarRecorridosDestacados extends FragmentActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 AgregarRecorridosDestacados.this);
         builder.setTitle("Opciones para compartir");
-
-
-
-
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Compartir")) {

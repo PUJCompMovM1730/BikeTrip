@@ -154,6 +154,11 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getBaseContext(),Compartir.class);
+              /*
+                i.putExtra("LatI", lat);
+                i.putExtra("LonI", lon);
+                i.putExtra("LatF", latF);
+                i.putExtra("LonF", lonF);*/
                 startActivity(i);
             }
         });
@@ -265,7 +270,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
 
                     myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-
                     String	key	= myRef.child("rutas").push().getKey();
                     //myRef.push().getKey();
                     myRef=database.getReference(PATH_RUTAS+key);
@@ -617,7 +621,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                             PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
-                            Log.i("Evento: ", "Encontró evento:	");
                             Double eveLat = myPunto.getLat();
                             Double eveLon = myPunto.getLon();
                             if(eveLat==marker.getPosition().latitude&& eveLon==marker.getPosition().longitude)
@@ -1000,10 +1003,9 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    PuntoEnt myEvento =	singleSnapshot.getValue(PuntoEnt.class);
-                    Log.i("Evento: ", "Encontró evento:	");
-                    Double eveLat = myEvento.getLat();
-                    Double eveLon = myEvento.getLon();
+                    PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
+                    Double eveLat = myPunto.getLat();
+                    Double eveLon = myPunto.getLon();
                     Double dis = distance(lat,lon, eveLat,eveLon);
                     LatLng eveL = new LatLng(eveLat,eveLon);
                     if(dis<=10)
@@ -1025,6 +1027,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     }
 
     public void loadPuntosEmpresas() {
+        myRef =FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
         myRef = database.getReference(PATH_PUNTOS_EMPRESAS);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1035,7 +1038,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Log.i("PuntoEmpresa: ", "Encontró empresa:	"+puntoEmpresa.toString());
                     Date fechaActual = Calendar.getInstance().getTime();
 
-                    if(puntoEmpresa.getHora_cierre().after(fechaActual)){
+                  //  if(puntoEmpresa.getHora_cierre().after(fechaActual)){
                         final LatLng coordenadaPunto = new LatLng(puntoEmpresa.getLatitud(),
                                 puntoEmpresa.getLongitud());
                         final String informacion = puntoEmpresa.getNombre() + " - " + puntoEmpresa.getTelefono();
@@ -1044,9 +1047,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         mStorageRef = FirebaseStorage.getInstance().
                                 getReference(PATH_IMAGENES +puntoEmpresa.getIdEmpresa()
                                         +"/"+puntoEmpresa.getFoto());
-
-
-
                         mStorageRef.getBytes(Long.MAX_VALUE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
@@ -1070,7 +1070,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         });
 
                     }
-                }
+//                }
             }
 
 

@@ -90,14 +90,9 @@ public class FacebookShare {
                                 "Error inesperado al compartir",
                                 Toast.LENGTH_SHORT).show();
                     }
-
-
                 });
 
             }catch (Exception e){Log.i("ERROR_SHARING",e.toString());}
-
         }
-
     }
-
 }

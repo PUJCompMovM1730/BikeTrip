@@ -3,6 +3,7 @@ package com.example.carlos.biketrip;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,13 +63,13 @@ public class Comentar extends AppCompatActivity {
                 int can = getIntent().getIntExtra("CantidadU",0);
                 float puntajeAc = getIntent().getFloatExtra("PuntajeA",0);
 
-                float puntaF;
+                float puntaF=0;
+                Log.i("Puntaje ",""+puntajeAc);
                 if(can==0)
                 {
                     puntaF=puntaje;
                 }else{
                     puntaF = puntajeAc*(can/(can+1))+puntaje*(1/(can+1));
-
                 }
                 String idP = getIntent().getStringExtra("IDP");
                 Date d = new Date();
@@ -80,10 +81,8 @@ public class Comentar extends AppCompatActivity {
                 c.setfCalificacion(d);
                 c.setIdPunto(idP);
                 myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
-
                 String key = myRef.push().getKey();
                 c.setIdComentario(key);
-
                 myRef = database.getReference(PATH_COMENTARIOS+ key);
                 myRef.setValue(c);
                 PuntoEnt p = (PuntoEnt) getIntent().getSerializableExtra("Punto");
@@ -95,8 +94,7 @@ public class Comentar extends AppCompatActivity {
 
                 finish();
                 Toast.makeText(getBaseContext(),"Comentario Creado",Toast.LENGTH_LONG).show();
-
-
+                startActivity(new Intent(getBaseContext(),Maps.class));
             }
         });
 
