@@ -319,8 +319,21 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Intent i = new Intent(getBaseContext(), Punto.class);
                     //Bundle b = new Bundle();
                     if(lat!=0){
+<<<<<<< HEAD
                         /*
                     final boolean[] usuario = {true};
+=======
+                        startLatLng = new LatLng(lat,lon);
+                        i.putExtra("Lat",lat);
+                        i.putExtra("Lon",lon);
+                        //   Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
+                        reiniciar=true;
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
+
+                   /* final boolean[] usuario = {true};
+>>>>>>> 017a4808b3d98f536f1432b67d0ed2e2203ebb34
                     myRef1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ejerciciostorage.firebaseio.com/");
                     myRef1.child("users");
                     final String uId = mAuth.getCurrentUser().getUid();
@@ -350,6 +363,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         Intent intent = new Intent(getBaseContext(), CrearPuntoEmpresa.class);
                         startActivity(intent);*/
 
+<<<<<<< HEAD
                         startLatLng = new LatLng(lat,lon);
                         i.putExtra("Lat",lat);
                         i.putExtra("Lon",lon);
@@ -358,6 +372,8 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                         startActivity(i);
                     }else{
                         Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
+=======
+>>>>>>> 017a4808b3d98f536f1432b67d0ed2e2203ebb34
                     }
                 }
             }
