@@ -314,6 +314,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
                 }
                 if(idi==2){//Selecciono agregar PUnto
+
                     Intent intent = new Intent(getBaseContext(), Punto.class);
                     reiniciar=true;
                     startActivity(intent);

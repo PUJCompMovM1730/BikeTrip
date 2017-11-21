@@ -52,7 +52,6 @@
             android:src="@drawable/parar"/>
             <!--android:src="@drawable/parar"-->
 
-
         <ImageButton
             android:id="@+id/registrar"
             android:layout_width="60dp"
