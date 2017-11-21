@@ -97,6 +97,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     Polyline line;
     Context context;
+    private DatabaseReference myRef1;
     public	final	static	double	RADIUS_OF_EARTH_KM	 =	6371;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -106,7 +107,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private LocationRequest mLocationRequest;
     private double lat = 0, lon=0;
     EditText txtDireccion;
-    TextView txInfo;
     TextView txttiempo;
     TextView txtduracion;
     public static final double lowerLeftLatitude = 4.475113;
@@ -118,12 +118,15 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private FirebaseAuth mAuth;
     private boolean reiniciar;
     private final static int RESULTADOH = 0;
+    boolean usuario = true;
 
     private Button mRutas;
+    private Button btnCompartir;
     private LatLng startLatLng;
     private LatLng endLatLng;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    public	static	final	String	PATH_USERS="users/";
     public	static	final	String	PATH_RUTAS="rutas/";
     public	static	final	String	PATH_EVENTOS="eventos/";
     public	static	final	String	PATH_PUNTOS="puntos/";
@@ -134,8 +137,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-
         //Inicialización en	onCreate()
         mAuth =	FirebaseAuth.getInstance();
        // endLatLng=null;
@@ -143,10 +144,19 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         puntoActual =null;
         puntoFinal = null;
         reiniciar=true;
+        btnCompartir = (Button)findViewById(R.id.btnCompartir);
         database=	FirebaseDatabase.getInstance();
         txtduracion = (TextView) findViewById(R.id.duracionREC);
         txttiempo = (TextView) findViewById(R.id.tiempoREC);
         mRutas = (Button) findViewById(R.id.btnMasrutas);
+        txtDireccion = (EditText)findViewById(R.id.texto);
+        btnCompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getBaseContext(),Compartir.class);
+                startActivity(i);
+            }
+        });
         mRutas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -278,17 +288,20 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     Toast.makeText(getBaseContext(),"Para guardar esta ruta para el futuro, ingrese los datos de la misma", Toast.LENGTH_LONG);
                 }else{
                     Intent i = new Intent(getBaseContext(),PlanearRuta.class);
-                    Bundle b = new Bundle();
-                    b.putDouble("LatI",startLatLng.latitude);
-                    b.putDouble("LonI",startLatLng.longitude);
-                    b.putBoolean("Fin",false);
-                    if(endLatLng!=null)
-                    {
-                        b.putDouble("LatF",endLatLng.latitude);
-                        b.putDouble("LonF",endLatLng.longitude);
+                    RutaEnt r = new RutaEnt();
+                    i.putExtra("Actividad",2);
+                    r.setLatInicio(startLatLng.latitude);
+                    r.setLonInicio(startLatLng.longitude);
+                    r.setLatFinal(endLatLng.latitude);
+                    r.setLonFinal(endLatLng.longitude);
+                    r.setInicio("Actual");
+                    if(txtDireccion.getText().equals("")){
+                        r.setFin(txtDireccion.getText().toString());
+                    }else{
+                        r.setFin("Ubicación seleccionada");
                     }
-                    i.putExtra("Bundle",b);
                     reiniciar=true;
+                    i.putExtra("Ruta",r);
                     startActivity(i);
                 }
             }
@@ -318,12 +331,49 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }else{
                         Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
                     }
-
                 }
                 if(idi==2){//Selecciono agregar PUnto
-                    Intent intent = new Intent(getBaseContext(), Punto.class);
-                    reiniciar=true;
-                    startActivity(intent);
+                    if(lat!=0){
+                        startLatLng = new LatLng(lat,lon);
+                        startLatLng = new LatLng(lat,lon);
+                        myRef = database.getReference(PATH_USERS);
+                        reiniciar=true;
+                        final String uId = mAuth.getCurrentUser().getUid();
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                                    Usuario u =	singleSnapshot.getValue(Usuario.class);
+                                    String id= u.getID();
+                                    String  tipo = String.valueOf(u.getTipo());
+                                    tipo = tipo.trim();
+                                    if (id.equals(uId)) {
+                                        if(tipo.equals("0")){
+                                            usuario =false;
+                                            Intent im = new Intent(getBaseContext(), CrearPuntoEmpresa.class);
+                                            im.putExtra("Lat", lat);
+                                            im.putExtra("Lon", lon);
+                                            startActivity(im);
+                                        }
+                                    }
+                                }
+                                if(usuario){
+                                    Intent i = new Intent(getBaseContext(), Punto.class);
+                                    i.putExtra("Lat", lat);
+                                    i.putExtra("Lon", lon);
+                                    startActivity(i);
+                                }
+
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
+
+                    }
                 }
             }
 
@@ -339,7 +389,6 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         context = Maps.this;
-        txtDireccion = (EditText)findViewById(R.id.texto);
         txtDireccion.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -539,7 +588,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(final Marker marker) {
 
-                myRef = database.getReference(PATH_PUNTOS);
+                myRef = database.getReference(PATH_EVENTOS);
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -562,12 +611,39 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });
 
+                myRef = database.getReference(PATH_PUNTOS);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
+                            Log.i("Evento: ", "Encontró evento:	");
+                            Double eveLat = myPunto.getLat();
+                            Double eveLon = myPunto.getLon();
+                            if(eveLat==marker.getPosition().latitude&& eveLon==marker.getPosition().longitude)
+                            {
+                                Toast.makeText(getBaseContext(),"Punto: "+myPunto.getNombre(),Toast.LENGTH_LONG).show();
+                                Intent i = new Intent(getBaseContext(),ComentarPuntos.class);
+                                i.putExtra("Punto",myPunto);
+                                startActivity(i);
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                    }
+                });
                 // Return false to indicate that we have not consumed the event and that we wish
                 // for the default behavior to occur (which is for the camera to move such that the
                 // marker is centered and for the marker's info window to open, if it has one).
+
                 return false;
             }
         });
+
     }
     private void askPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -924,7 +1000,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    EventoEnt myEvento =	singleSnapshot.getValue(EventoEnt.class);
+                    PuntoEnt myEvento =	singleSnapshot.getValue(PuntoEnt.class);
                     Log.i("Evento: ", "Encontró evento:	");
                     Double eveLat = myEvento.getLat();
                     Double eveLon = myEvento.getLon();
@@ -933,7 +1009,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     if(dis<=10)
                     {
                         mMap.addMarker(new MarkerOptions().position(eveL).icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 
                     }

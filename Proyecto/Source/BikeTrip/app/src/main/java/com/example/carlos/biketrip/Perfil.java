@@ -197,7 +197,6 @@ public class Perfil extends AppCompatActivity {
         myRef.addValueEventListener(new	ValueEventListener()	{
             @Override
             public	void	onDataChange(DataSnapshot dataSnapshot)	 {
-
                 for	(DataSnapshot singleSnapshot :	dataSnapshot.getChildren())	{
 
                     Usuario u=new Usuario();

@@ -18,6 +18,9 @@ public class Mensaje {
     Date fechaMensaje;
 
 
+
+
+
     public Mensaje() {
         this.origen = "";
         this.destino ="";
