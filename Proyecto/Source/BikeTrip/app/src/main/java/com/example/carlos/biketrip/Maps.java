@@ -313,9 +313,18 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
 
                 }
                 if(idi==2){//Selecciono agregar PUnto
-                    Intent intent = new Intent(getBaseContext(), Punto.class);
-                    reiniciar=true;
-                    startActivity(intent);
+                    Intent i = new Intent(getBaseContext(), Punto.class);
+                    //Bundle b = new Bundle();
+                    if(lat!=0){
+                        startLatLng = new LatLng(lat,lon);
+                        i.putExtra("Lat",lat);
+                        i.putExtra("Lon",lon);
+                        //   Toast.makeText(getBaseContext(),"Lat:"+lat+"Long"+lon, Toast.LENGTH_SHORT).show();
+                        reiniciar=true;
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(getBaseContext(),"Por favor intente de nuevo", Toast.LENGTH_SHORT);
+                    }
                 }
             }
 
@@ -477,7 +486,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(final Marker marker) {
 
-                myRef = database.getReference(PATH_PUNTOS);
+                myRef = database.getReference(PATH_EVENTOS);
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -500,12 +509,39 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });
 
+                myRef = database.getReference(PATH_PUNTOS);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            PuntoEnt myPunto =	singleSnapshot.getValue(PuntoEnt.class);
+                            Log.i("Evento: ", "Encontró evento:	");
+                            Double eveLat = myPunto.getLat();
+                            Double eveLon = myPunto.getLon();
+                            if(eveLat==marker.getPosition().latitude&& eveLon==marker.getPosition().longitude)
+                            {
+                                Toast.makeText(getBaseContext(),"Punto: "+myPunto.getNombre(),Toast.LENGTH_LONG).show();
+                                Intent i = new Intent(getBaseContext(),ComentarPuntos.class);
+                                i.putExtra("Punto",myPunto);
+                                startActivity(i);
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error: ", "error	en	la	consulta", databaseError.toException());
+                    }
+                });
                 // Return false to indicate that we have not consumed the event and that we wish
                 // for the default behavior to occur (which is for the camera to move such that the
                 // marker is centered and for the marker's info window to open, if it has one).
+
                 return false;
             }
         });
+
     }
     private void askPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -862,7 +898,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    EventoEnt myEvento =	singleSnapshot.getValue(EventoEnt.class);
+                    PuntoEnt myEvento =	singleSnapshot.getValue(PuntoEnt.class);
                     Log.i("Evento: ", "Encontró evento:	");
                     Double eveLat = myEvento.getLat();
                     Double eveLon = myEvento.getLon();
@@ -871,7 +907,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
                     if(dis<=10)
                     {
                         mMap.addMarker(new MarkerOptions().position(eveL).icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 
                     }
