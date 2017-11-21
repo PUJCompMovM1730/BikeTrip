@@ -23,10 +23,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <provider android:authorities="com.facebook.app.FacebookContentProvider295367064293362"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
+            android:authorities="com.facebook.app.FacebookContentProvider295367064293362"
+            android:exported="true" />
 
         <activity
             android:name=".MainActivity"
@@ -87,7 +87,9 @@
         </activity>
         <activity android:name=".CrearRecorridosDestacados" />
         <activity android:name=".RecorridosDestacados" />
-        <activity android:name=".CrearPuntoEmpresa"></activity>
+        <activity android:name=".CrearPuntoEmpresa" />
+        <activity android:name=".ComentarPuntos" />
+        <activity android:name=".Comentar"></activity>
     </application>
 
 </manifest>

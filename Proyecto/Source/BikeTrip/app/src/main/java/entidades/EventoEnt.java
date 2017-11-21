@@ -7,6 +7,7 @@ import java.util.Date;
  */
 
 public class EventoEnt {
+
     private double lat;
     private double lon;
     private String imagen;
